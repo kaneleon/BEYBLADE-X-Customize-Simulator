@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>BEYBLADE X 物理補正カスタムシミュレーター (iPhone完全動作保証版)</title>
+<style>
+  :root {
+    --primary: #00f3ff;
+    --secondary: #ff0055;
+    --bg-color: #0b0c10;
+    --card-bg: #161821;
+    --card-inner: #0f1118;
+    --border-color: #2a2e3d;
+    --text-main: #f0f2f5;
+    --text-muted: #94a3b8;
+
+    --attack-color: #ff4b4b;
+    --defense-color: #10b981;
+    --stamina-color: #f59e0b;
+    --dash-color: #06b6d4;
+    --burst-color: #a855f7;
+    --height-color: #8b5cf6;
+    
+    --sab: env(safe-area-inset-bottom, 0px);
+    --sat: env(safe-area-inset-top, 0px);
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Hiragino Sans", "Helvetica Neue", sans-serif;
+    padding: calc(var(--sat) + 12px) 12px calc(var(--sab) + 24px) 12px;
+    line-height: 1.4;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  header {
+    text-align: center;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  header h1 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+  }
+
+  header h1 span {
+    color: var(--primary);
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+  }
+
+  header p {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* セレクトボックスのiOS自動ズームを完全に防止するため16px固定 */
+  select, button, input {
+    font-size: 16px !important;
+    touch-action: manipulation;
+    font-family: inherit;
+  }
+
+  /* ナビゲーションタブ */
+  .nav-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 10px 4px;
+    background-color: #1e2230;
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s ease;
+  }
+
+  .tab-btn.active {
+    background-color: var(--primary);
+    color: #050b14;
+    border-color: var(--primary);
+    box-shadow: 0 0 12px rgba(0, 243, 255, 0.3);
+  }
+
+  .tab-content {
+    display: none;
+  }
+  .tab-content.active {
+    display: block;
+  }
+
+  /* グリッドレイアウト */
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  @media (min-width: 640px) {
+    .grid-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .select-card {
+    background-color: var(--card-bg);
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.05);
+  }
+
+  .select-card-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .select-card label {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: var(--primary);
+  }
+
+  .badge-influence {
+    font-size: 0.65rem;
+    background-color: #222736;
+    color: var(--text-muted);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .select-card select {
+    width: 100%;
+    background-color: var(--card-inner);
+    border: 1px solid var(--border-color);
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom: 12px;
+    outline: none;
+  }
+  .select-card select:focus {
+    border-color: var(--primary);
+  }
+
+  .img-box {
+    width: 100px;
+    height: 100px;
+    background-color: #000;
+    border-radius: 10px;
+    border: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* SVGパーツ表示 */
+  .svg-icon {
+    width: 70px;
+    height: 70px;
+  }
+
+  /* 結果カード */
+  .result-card {
+    background-color: var(--card-bg);
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+  }
+
+  .result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+  }
+
+  .result-header h2 {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: var(--secondary);
+  }
+
+  .total-weight-box {
+    font-size: 0.85rem;
+    color: var(--text-main);
+  }
+
+  .total-weight-val {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--primary);
+    margin-left: 4px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  @media (min-width: 640px) {
+    .stats-grid {
+      grid-template-columns: 1fr 1fr;
+      column-gap: 20px;
+    }
+  }
+
+  .stat-group {
+    margin-bottom: 4px;
+  }
+
+  .stat-label-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin-bottom: 3px;
+  }
+
+  .stat-bar-bg {
+    width: 100%;
+    height: 8px;
+    background-color: #1a1e2b;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .stat-bar-fill {
+    height: 100%;
+    width: 0%;
+    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .physics-notes {
+    background-color: rgba(15, 17, 24, 0.9);
+    padding: 10px 12px;
+    border-radius: 8px;
+    border-left: 3px solid var(--primary);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+    margin-top: 12px;
+  }
+
+  /* フィルターボタン群 */
+  .filter-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .filter-btn {
+    flex: 1;
+    min-width: 90px;
+    padding: 8px 10px;
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    border-radius: 20px;
+    font-size: 0.75rem !important;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .filter-btn.active {
+    background-color: #2563eb;
+    border-color: #60a5fa;
+    color: #ffffff;
+    font-weight: bold;
+  }
+
+  /* おすすめカード */
+  .recommend-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 10px;
+  }
+  @media (min-width: 640px) {
+    .recommend-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .recommend-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 12px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .rank-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--secondary);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 900;
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+
+  .recommend-card h3 {
+    font-size: 0.85rem;
+    color: var(--primary);
+    padding-right: 55px;
+    margin-bottom: 6px;
+  }
+
+  .combo-detail {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+
+  .score-display {
+    background-color: var(--card-inner);
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    margin-bottom: 10px;
+  }
+
+  .apply-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--primary);
+    color: #050b14;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.8rem !important;
+    cursor: pointer;
+  }
+
+  /* テーブル表示 */
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    max-height: 60vh;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.75rem;
+    min-width: 600px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #1e2230;
+    color: var(--text-muted);
+    padding: 10px 8px;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  td {
+    padding: 8px;
+    border-bottom: 1px solid rgba(42, 46, 61, 0.5);
+    background-color: var(--card-bg);
+    white-space: nowrap;
+  }
+
+  .part-icon-sm {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>BEYBLADE X <span>物理補正シミュレーター</span></h1>
+    <p>100% オフライン完全動作 / 高速レスポンス対応</p>
+  </header>
+
+  <nav class="nav-tabs" role="tablist">
+    <button type="button" id="tab-btn-simulator" onclick="app.switchTab('simulator', this)" class="tab-btn active">
+      シミュレーター
+    </button>
+    <button type="button" id="tab-btn-recommend" onclick="app.switchTab('recommend', this)" class="tab-btn">
+      おすすめ提案
+    </button>
+    <button type="button" id="tab-btn-partsList" onclick="app.switchTab('partsList', this)" class="tab-btn">
+      パーツ比較表
+    </button>
+  </nav>
+
+  <!-- 1. シミュレーター タブ -->
+  <main id="tab-simulator" class="tab-content active">
+    <div class="grid-3">
+      <!-- ブレード -->
+      <div class="select-card">
+        <div class="select-card-header">
+          <label for="bladeSelect">ブレード (Blade)</label>
+          <span class="badge-influence">影響度: 100%</span>
+        </div>
+        <select id="bladeSelect" onchange="app.updateSim()"></select>
+        <div class="img-box" id="bladeImg"></div>
+      </div>
+
+      <!-- ラチェット -->
+      <div class="select-card">
+        <div class="select-card-header">
+          <label for="ratchetSelect">ラチェット (Ratchet)</label>
+          <span class="badge-influence">影響度: 35%</span>
+        </div>
+        <select id="ratchetSelect" onchange="app.updateSim()"></select>
+        <div class="img-box" id="ratchetImg"></div>
+      </div>
+
+      <!-- ビット -->
+      <div class="select-card">
+        <div class="select-card-header">
+          <label for="bitSelect">ビット (Bit)</label>
+          <span class="badge-influence">影響度: 75%</span>
+        </div>
+        <select id="bitSelect" onchange="app.updateSim()"></select>
+        <div class="img-box" id="bitImg"></div>
+      </div>
+    </div>
+
+    <!-- ステータス表示 -->
+    <div class="result-card">
+      <div class="result-header">
+        <h2>物理補正総合ステータス</h2>
+        <div class="total-weight-box">
+          総重量: <span id="totalWeight" class="total-weight-val">0.00</span> <span style="font-size:0.7rem;">g</span>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-group">
+          <div class="stat-label-row">
+            <span style="color:var(--attack-color)">攻撃 (Attack)</span>
+            <span id="valAtk">0</span>
+          </div>
+          <div class="stat-bar-bg"><div id="barAtk" class="stat-bar-fill" style="background:var(--attack-color)"></div></div>
+        </div>
+
+        <div class="stat-group">
+          <div class="stat-label-row">
+            <span style="color:var(--defense-color)">防御 (Defense)</span>
+            <span id="valDef">0</span>
+          </div>
+          <div class="stat-bar-bg"><div id="barDef" class="stat-bar-fill" style="background:var(--defense-color)"></div></div>
+        </div>
+
+        <div class="stat-group">
+          <div class="stat-label-row">
+            <span style="color:var(--stamina-color)">持久 (Stamina)</span>
+            <span id="valSta">0</span>
+          </div>
+          <div class="stat-bar-bg"><div id="barSta" class="stat-bar-fill" style="background:var(--stamina-color)"></div></div>
+        </div>
+
+        <div class="stat-group">
+          <div class="stat-label-row">
+            <span style="color:var(--dash-color)">ダッシュ (Dash)</span>
+            <span id="valDash">0</span>
+          </div>
+          <div class="stat-bar-bg"><div id="barDash" class="stat-bar-fill" style="background:var(--dash-color)"></div></div>
+        </div>
+
+        <div class="stat-group">
+          <div class="stat-label-row">
+            <span style="color:var(--burst-color)">バースト耐性 (Burst Res)</span>
+            <span id="valBrst">0</span>
+          </div>
+          <div class="stat-bar-bg"><div id="barBrst" class="stat-bar-fill" style="background:var(--burst-color)"></div></div>
+        </div>
+
+        <div class="stat-group">
+          <div class="stat-label-row">
+            <span style="color:var(--height-color)">全高 (Total Height)</span>
+            <span id="valHgt">0</span>
+          </div>
+          <div class="stat-bar-bg"><div id="barHgt" class="stat-bar-fill" style="background:var(--height-color)"></div></div>
+        </div>
+      </div>
+
+      <div id="physicsNotes" class="physics-notes">計算中...</div>
+    </div>
+  </main>
+
+  <!-- 2. おすすめ提案 タブ -->
+  <main id="tab-recommend" class="tab-content">
+    <div class="filter-btns">
+      <button type="button" class="filter-btn active" id="rec-atk" onclick="app.generateRecommendations('atk')">攻撃特化</button>
+      <button type="button" class="filter-btn" id="rec-def" onclick="app.generateRecommendations('def')">防御特化</button>
+      <button type="button" class="filter-btn" id="rec-sta" onclick="app.generateRecommendations('sta')">持久特化</button>
+      <button type="button" class="filter-btn" id="rec-dash" onclick="app.generateRecommendations('dash')">ダッシュ特化</button>
+      <button type="button" class="filter-btn" id="rec-brst" onclick="app.generateRecommendations('brst')">バースト耐性</button>
+      <button type="button" class="filter-btn" id="rec-weight" onclick="app.generateRecommendations('weight')">最重量級</button>
+    </div>
+
+    <p style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 10px;">
+      重量・慣性モーメント・全高物理計算に基づいた自動選定組み合わせ（上位6選）
+    </p>
+
+    <div id="recommendGrid" class="recommend-grid"></div>
+  </main>
+
+  <!-- 3. パーツ比較表 タブ -->
+  <main id="tab-partsList" class="tab-content">
+    <div class="filter-btns">
+      <button type="button" class="filter-btn active" id="f-blades" onclick="app.filterList('blades')">ブレード全種</button>
+      <button type="button" class="filter-btn" id="f-ratchets" onclick="app.filterList('ratchets')">ラチェット全種</button>
+      <button type="button" class="filter-btn" id="f-bits" onclick="app.filterList('bits')">ビット全種</button>
+    </div>
+
+    <div class="table-wrap">
+      <table id="dataTable">
+        <thead></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  var INFLUENCE = { blade: 1.00, bit: 0.75, ratchet: 0.35 };
+
+  function pseudoRand(seed) {
+    var h = 0;
+    for (var i = 0; i < seed.length; i++) {
+      h = Math.imul(31, h) + seed.charCodeAt(i) | 0;
+    }
+    return function() {
+      h = Math.imul(741103597, h);
+      return ((h >>> 0) / 4294967296);
+    };
+  }
+
+  // ブレードデータ
+  var rawBlades = [
+    {name: "ドランソード", series: "BX", type: "アタック", weight: 35.0, shape: "jagged"},
+    {name: "ヘルズサイズ", series: "BX", type: "バランス", weight: 33.0, shape: "semi_round"},
+    {name: "ウィザードアロー", series: "BX", type: "スタミナ", weight: 32.0, shape: "round"},
+    {name: "ナイトシールド", series: "BX", type: "ディフェンス", weight: 32.0, shape: "round"},
+    {name: "ナイトランス", series: "BX", type: "ディフェンス", weight: 33.0, shape: "semi_round"},
+    {name: "ヴァイパーテイル", series: "BX", type: "スタミナ", weight: 35.0, shape: "round"},
+    {name: "レオンクロー", series: "BX", type: "バランス", weight: 32.0, shape: "semi_round"},
+    {name: "ライノホーン", series: "BX", type: "ディフェンス", weight: 33.0, shape: "round"},
+    {name: "ドランダガー", series: "BX", type: "アタック", weight: 35.0, shape: "jagged"},
+    {name: "ヘルズチェイン", series: "BX", type: "バランス", weight: 33.0, shape: "semi_round"},
+    {name: "フェニックスウイング", series: "BX", type: "アタック", weight: 39.0, shape: "heavy_jagged"},
+    {name: "ワイバーンゲイル", series: "BX", type: "スタミナ", weight: 32.0, shape: "round"},
+    {name: "ユニコーンスティング", series: "BX", type: "バランス", weight: 33.0, shape: "asymmetric"},
+    {name: "スフィンクスカウル", series: "BX", type: "ディフェンス", weight: 33.0, shape: "round"},
+    {name: "ティラノビート", series: "BX", type: "アタック", weight: 37.0, shape: "jagged"},
+    {name: "ヴァイスタイガー", series: "BX", type: "バランス", weight: 35.0, shape: "semi_round"},
+    {name: "コバルトドラグーン", series: "BX", type: "アタック", weight: 38.0, shape: "heavy_jagged"},
+    {name: "ブラックシェル", series: "BX", type: "ディフェンス", weight: 32.0, shape: "round"},
+    {name: "シャークエッジ", series: "BX", type: "アタック", weight: 35.0, shape: "upper_jagged"},
+    {name: "ホエールウェーブ", series: "BX", type: "バランス", weight: 38.0, shape: "heavy_round"},
+    {name: "ドランバスター", series: "UX", type: "アタック", weight: 37.0, shape: "extreme_jagged"},
+    {name: "ヘルズハンマー", series: "UX", type: "バランス", weight: 33.0, shape: "semi_round"},
+    {name: "ウィザードロッド", series: "UX", type: "スタミナ", weight: 35.0, shape: "perfect_round"},
+    {name: "シノビシャドウ", series: "UX", type: "ディフェンス", weight: 28.0, shape: "round"},
+    {name: "レオンクレスト", series: "UX", type: "ディフェンス", weight: 35.0, shape: "round"},
+    {name: "フェニックスラダー", series: "UX", type: "スタミナ", weight: 35.0, shape: "round"},
+    {name: "シルバーウルフ", series: "UX", type: "スタミナ", weight: 37.0, shape: "perfect_round"},
+    {name: "インパクトドレイク", series: "UX", type: "アタック", weight: 39.0, shape: "heavy_jagged"}
+  ];
+
+  var blades = rawBlades.map(function(b) {
+    var rng = pseudoRand(b.name);
+    var atk, def, sta;
+    if(b.type === "アタック") { atk = 7 + Math.floor(rng()*4); def = 2 + Math.floor(rng()*4); sta = 2 + Math.floor(rng()*3); }
+    else if(b.type === "ディフェンス") { atk = 2 + Math.floor(rng()*3); def = 7 + Math.floor(rng()*4); sta = 4 + Math.floor(rng()*4); }
+    else if(b.type === "スタミナ") { atk = 1 + Math.floor(rng()*3); def = 4 + Math.floor(rng()*4); sta = 7 + Math.floor(rng()*4); }
+    else { atk = 5 + Math.floor(rng()*4); def = 5 + Math.floor(rng()*4); sta = 5 + Math.floor(rng()*4); }
+    
+    var dash = (b.type === "アタック") ? 4 + Math.floor(rng()*3) : 1 + Math.floor(rng()*3);
+    var brst = Math.floor((b.weight - 30) / 2) + Math.floor(rng()*3);
+    var hgt = 2 + Math.floor(rng()*2);
+    
+    return Object.assign({}, b, {atk: atk, def: def, sta: sta, dash: dash, brst: brst, hgt: hgt});
+  });
+
+  // ラチェットデータ
+  var rawRatchets = ["1-60","2-60","3-60","4-60","5-60","7-60","9-60","0-60","1-80","2-80","3-80","4-80","5-80","7-80","9-80","0-80","3-70","4-70","5-70","7-70","9-70","0-70","5-50","7-50","9-50"];
+  var ratchets = rawRatchets.map(function(r) {
+    var parts = r.split('-');
+    var p = parseInt(parts[0], 10);
+    var h = parseInt(parts[1], 10);
+    var w = 6.0 + (p * 0.1) + ((h - 60) * 0.02);
+    var hgt = Math.floor((h - 40) / 5);
+    var brst = 10 - Math.floor((h - 50) / 5);
+    var atk = p % 2 !== 0 ? 3 : 1;
+    var def = p % 2 === 0 || p === 0 ? 3 : 1;
+    return {
+      name: r, series: "全般", type: "ラチェット", weight: w,
+      atk: atk, def: def, sta: 2, dash: 0, brst: brst, hgt: hgt,
+      bladesCount: p, heightVal: h
+    };
+  });
+
+  // ビットデータ
+  var rawBits = [
+    {n: "F (Flat)", t: "アタック"}, {n: "LF (Low Flat)", t: "アタック"}, {n: "GF (Gear Flat)", t: "アタック"}, {n: "T (Taper)", t: "アタック"}, {n: "R (Rush)", t: "アタック"},
+    {n: "B (Ball)", t: "スタミナ"}, {n: "DB (Disc Ball)", t: "スタミナ"}, {n: "O (Orb)", t: "スタミナ"}, {n: "W (Wedge)", t: "スタミナ"},
+    {n: "N (Needle)", t: "ディフェンス"}, {n: "HN (High Needle)", t: "ディフェンス"}, {n: "MN (Metal Needle)", t: "ディフェンス"},
+    {n: "P (Point)", t: "バランス"}, {n: "GP (Gear Point)", t: "バランス"}, {n: "U (Unite)", t: "バランス"}, {n: "E (Elevate)", t: "バランス"}
+  ];
+
+  var bits = rawBits.map(function(b) {
+    var w = 2.0;
+    if(b.n.indexOf("G") !== -1) w += 0.1;
+    if(b.n.indexOf("M") !== -1 || b.n.indexOf("D") !== -1) w += 0.2;
+    
+    var rng = pseudoRand(b.n);
+    var atk=1, def=1, sta=1, dash=1, brst=5, hgt=3;
+    if(b.n.indexOf("H") !== -1) hgt = 6;
+    if(b.n.indexOf("L") !== -1) hgt = 1;
+
+    if(b.t === "アタック") { atk = 8+Math.floor(rng()*3); dash = 7+Math.floor(rng()*4); def=1; sta=2; }
+    else if(b.t === "ディフェンス") { def = 8+Math.floor(rng()*3); dash = 1; atk=2; sta=4; }
+    else if(b.t === "スタミナ") { sta = 8+Math.floor(rng()*3); dash = 1; atk=1; def=4; }
+    else { atk=5; def=5; sta=5; dash=4; }
+    
+    brst = 4 + Math.floor(rng()*4);
+
+    return {
+      name: b.n, series: "全般", type: b.t, weight: w,
+      atk: atk, def: def, sta: sta, dash: dash, brst: brst, hgt: hgt
+    };
+  });
+
+  var currentListType = 'blades';
+  var sortKey = 'weight';
+  var sortDesc = true;
+
+  // 内蔵用高精細SVG生成関数 (完全スタンドアロン)
+  function createSVGIcon(type) {
+    var color = '#ff4b4b';
+    var pathData = '';
+
+    if (type === 'アタック') {
+      color = '#ff4b4b';
+      pathData = '<polygon points="50,15 65,35 90,35 70,55 80,85 50,65 20,85 30,55 10,35 35,35" fill="none" stroke="' + color + '" stroke-width="6"/>';
+    } else if (type === 'ディフェンス') {
+      color = '#10b981';
+      pathData = '<polygon points="50,15 85,30 85,70 50,90 15,70 15,30" fill="none" stroke="' + color + '" stroke-width="6"/>';
+    } else if (type === 'スタミナ') {
+      color = '#f59e0b';
+      pathData = '<circle cx="50" cy="50" r="35" fill="none" stroke="' + color + '" stroke-width="6"/><circle cx="50" cy="50" r="15" fill="' + color + '"/>';
+    } else if (type === 'ラチェット') {
+      color = '#8b5cf6';
+      pathData = '<rect x="25" y="25" width="50" height="50" rx="10" fill="none" stroke="' + color + '" stroke-width="6"/>';
+    } else { // バランス
+      color = '#06b6d4';
+      pathData = '<circle cx="50" cy="50" r="35" fill="none" stroke="' + color + '" stroke-width="5"/><polygon points="50,20 80,75 20,75" fill="none" stroke="' + color + '" stroke-width="5"/>';
+    }
+
+    return '<svg class="svg-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">' + pathData + '</svg>';
+  }
+
+  // 物理補正計算
+  function calculatePhysicsStats(bd, rt, bt) {
+    if(!bd || !rt || !bt) return { atk:0, def:0, sta:0, dash:0, brst:0, hgt:0, totalWeight:"0.00", ratchetH:60 };
+
+    var totalWeight = bd.weight + rt.weight + bt.weight;
+    var ratchetH = rt.heightVal;
+
+    var baseAtk = bd.atk * INFLUENCE.blade + rt.atk * INFLUENCE.ratchet + bt.atk * INFLUENCE.bit;
+    var baseDef = bd.def * INFLUENCE.blade + rt.def * INFLUENCE.ratchet + bt.def * INFLUENCE.bit;
+    var baseSta = bd.sta * INFLUENCE.blade + rt.sta * INFLUENCE.ratchet + bt.sta * INFLUENCE.bit;
+    var baseDash = bd.dash * INFLUENCE.blade + rt.dash * INFLUENCE.ratchet + bt.dash * INFLUENCE.bit;
+    var baseBrst = bd.brst * INFLUENCE.blade + rt.brst * INFLUENCE.ratchet + bt.brst * INFLUENCE.bit;
+    var baseHgt = bd.hgt * INFLUENCE.blade + rt.hgt * INFLUENCE.ratchet + bt.hgt * INFLUENCE.bit;
+
+    var weightAtkBonus = (totalWeight - 40.0) * 0.45;
+    var weightDefBonus = (totalWeight - 40.0) * 0.40;
+    var weightStaPenalty = (totalWeight - 40.0) * 0.12;
+    var weightBrstBonus = (totalWeight - 40.0) * 0.25;
+
+    var heightAtkBonus = (ratchetH >= 70) ? 1.2 : 0;
+    var heightDefBonus = (ratchetH <= 60) ? 1.2 : -1.0;
+    var heightBrstBonus = (ratchetH <= 55) ? 1.8 : (ratchetH >= 75) ? -1.5 : 0;
+
+    var shapeAtkBonus = 0, shapeDefBonus = 0, shapeStaBonus = 0;
+    if (bd.shape && bd.shape.indexOf("jagged") !== -1) shapeAtkBonus += 1.5;
+    if (bd.shape && bd.shape.indexOf("round") !== -1) { shapeDefBonus += 1.2; shapeStaBonus += 1.5; }
+
+    var finalAtk = Math.max(1, baseAtk + weightAtkBonus + heightAtkBonus + shapeAtkBonus);
+    var finalDef = Math.max(1, baseDef + weightDefBonus + heightDefBonus + shapeDefBonus);
+    var finalSta = Math.max(1, baseSta - weightStaPenalty + shapeStaBonus);
+    var finalDash = Math.max(1, baseDash);
+    var finalBrst = Math.max(1, baseBrst + weightBrstBonus + heightBrstBonus);
+    var finalHgt = Math.max(1, baseHgt + (ratchetH - 60) * 0.15);
+
+    return {
+      atk: Number(finalAtk.toFixed(1)),
+      def: Number(finalDef.toFixed(1)),
+      sta: Number(finalSta.toFixed(1)),
+      dash: Number(finalDash.toFixed(1)),
+      brst: Number(finalBrst.toFixed(1)),
+      hgt: Number(finalHgt.toFixed(1)),
+      totalWeight: totalWeight.toFixed(2),
+      ratchetH: ratchetH
+    };
+  }
+
+  function populateSelects() {
+    var bSel = document.getElementById('bladeSelect');
+    var rSel = document.getElementById('ratchetSelect');
+    var btSel = document.getElementById('bitSelect');
+    if(!bSel || !rSel || !btSel) return;
+
+    bSel.innerHTML = '';
+    blades.forEach(function(b, idx) {
+      var opt = document.createElement('option');
+      opt.value = idx;
+      opt.textContent = '[' + b.series + '] ' + b.name;
+      bSel.appendChild(opt);
+    });
+
+    rSel.innerHTML = '';
+    ratchets.forEach(function(r, idx) {
+      var opt = document.createElement('option');
+      opt.value = idx;
+      opt.textContent = r.name;
+      rSel.appendChild(opt);
+    });
+
+    btSel.innerHTML = '';
+    bits.forEach(function(bt, idx) {
+      var opt = document.createElement('option');
+      opt.value = idx;
+      opt.textContent = bt.name;
+      btSel.appendChild(opt);
+    });
+  }
+
+  window.app = {
+    switchTab: function(tabId, btnEl) {
+      var contents = document.querySelectorAll('.tab-content');
+      contents.forEach(function(el) { el.classList.remove('active'); });
+
+      var tabButtons = document.querySelectorAll('.tab-btn');
+      tabButtons.forEach(function(el) { el.classList.remove('active'); });
+
+      var target = document.getElementById('tab-' + tabId);
+      if(target) target.classList.add('active');
+      if(btnEl) btnEl.classList.add('active');
+
+      if (tabId === 'recommend') {
+        this.generateRecommendations('atk');
+      } else if (tabId === 'partsList') {
+        this.renderList();
+      }
+    },
+
+    updateSim: function() {
+      var bSel = document.getElementById('bladeSelect');
+      var rSel = document.getElementById('ratchetSelect');
+      var btSel = document.getElementById('bitSelect');
+      if(!bSel || !rSel || !btSel) return;
+
+      var bd = blades[bSel.value] || blades[0];
+      var rt = ratchets[rSel.value] || ratchets[0];
+      var bt = bits[btSel.value] || bits[0];
+
+      document.getElementById('bladeImg').innerHTML = createSVGIcon(bd.type);
+      document.getElementById('ratchetImg').innerHTML = createSVGIcon(rt.type);
+      document.getElementById('bitImg').innerHTML = createSVGIcon(bt.type);
+
+      var stats = calculatePhysicsStats(bd, rt, bt);
+
+      document.getElementById('totalWeight').textContent = stats.totalWeight;
+
+      var setBar = function(id, val, max) {
+        document.getElementById('val' + id).textContent = val;
+        var bar = document.getElementById('bar' + id);
+        var pct = Math.min(100, Math.max(0, (val / max) * 100));
+        bar.style.width = pct + '%';
+      };
+
+      setBar('Atk', stats.atk, 24);
+      setBar('Def', stats.def, 24);
+      setBar('Sta', stats.sta, 24);
+      setBar('Dash', stats.dash, 18);
+      setBar('Brst', stats.brst, 24);
+      setBar('Hgt', stats.hgt, 15);
+
+      var heightNote = stats.ratchetH <= 60 
+        ? '低重心構成のため、足元の安定性が増しバースト耐性と傾き復元力が向上しています。' 
+        : '高重心構成のため、相手の上部にオーバーハングしてスマッシュ効果が強化されています。';
+
+      document.getElementById('physicsNotes').innerHTML = 
+        '<strong>【物理解析アナライザー】</strong><br>' +
+        '・<strong>総重量 (' + stats.totalWeight + 'g)</strong>: 重量が運動量と弾き飛ばし耐性に寄与。<br>' +
+        '・<strong>全高 (' + rt.name + ')</strong>: ' + heightNote + '<br>' +
+        '・<strong>形状相性</strong>: ブレード（' + bd.name + '）と' + rt.bladesCount + '枚刃の衝撃分散補正を適用。';
+    },
+
+    generateRecommendations: function(targetKey) {
+      var btns = document.querySelectorAll('#tab-recommend .filter-btn');
+      btns.forEach(function(b) { b.classList.remove('active'); });
+      var activeBtn = document.getElementById('rec-' + targetKey);
+      if(activeBtn) activeBtn.classList.add('active');
+
+      var combos = [];
+      for (var i = 0; i < blades.length; i++) {
+        for (var j = 0; j < ratchets.length; j += 2) {
+          for (var k = 0; k < bits.length; k += 2) {
+            var bd = blades[i];
+            var rt = ratchets[j];
+            var bt = bits[k];
+            var pStats = calculatePhysicsStats(bd, rt, bt);
+            var score = targetKey === 'weight' ? Number(pStats.totalWeight) : pStats[targetKey];
+            combos.push({
+              bIdx: i, rIdx: j, btIdx: k,
+              blade: bd, ratchet: rt, bit: bt,
+              score: score, weight: Number(pStats.totalWeight)
+            });
+          }
+        }
+      }
+
+      combos.sort(function(a, b) { return (b.score - a.score) || (b.weight - a.weight); });
+
+      var topCombos = [];
+      var usedBlades = {};
+      for (var c = 0; c < combos.length; c++) {
+        var item = combos[c];
+        if(!usedBlades[item.blade.name]) {
+          topCombos.push(item);
+          usedBlades[item.blade.name] = true;
+        }
+        if(topCombos.length >= 6) break;
+      }
+
+      var labels = { atk: '攻撃力', def: '防御力', sta: '持久力', dash: 'ダッシュ力', brst: 'バースト耐性', weight: '総重量' };
+      var grid = document.getElementById('recommendGrid');
+      grid.innerHTML = '';
+
+      topCombos.forEach(function(c, rank) {
+        var scoreText = targetKey === 'weight' ? c.weight.toFixed(2) + ' g' : c.score.toFixed(1) + ' pt';
+
+        var card = document.createElement('div');
+        card.className = 'recommend-card';
+
+        var rankBadge = document.createElement('span');
+        rankBadge.className = 'rank-badge';
+        rankBadge.textContent = 'RANK ' + (rank + 1);
+
+        var title = document.createElement('h3');
+        title.textContent = c.blade.name + ' ' + c.ratchet.name + ' ' + c.bit.name.split(' ')[0];
+
+        var detail = document.createElement('div');
+        detail.className = 'combo-detail';
+        detail.innerHTML = 'B: ' + c.blade.name + '<br>R: ' + c.ratchet.name + '<br>Bit: ' + c.bit.name;
+
+        var scoreDiv = document.createElement('div');
+        scoreDiv.className = 'score-display';
+        scoreDiv.innerHTML = '<span style="color:var(--text-muted);">' + labels[targetKey] + ':</span><span style="color:var(--primary); font-weight:bold;">' + scoreText + '</span>';
+
+        var applyBtn = document.createElement('button');
+        applyBtn.type = 'button';
+        applyBtn.className = 'apply-btn';
+        applyBtn.textContent = 'シミュレーターにセット';
+        applyBtn.onclick = function() {
+          app.applyCombo(c.bIdx, c.rIdx, c.btIdx);
+        };
+
+        card.appendChild(rankBadge);
+        card.appendChild(title);
+        card.appendChild(detail);
+        card.appendChild(scoreDiv);
+        card.appendChild(applyBtn);
+
+        grid.appendChild(card);
+      });
+    },
+
+    applyCombo: function(bIdx, rIdx, btIdx) {
+      document.getElementById('bladeSelect').value = bIdx;
+      document.getElementById('ratchetSelect').value = rIdx;
+      document.getElementById('bitSelect').value = btIdx;
+
+      this.switchTab('simulator', document.getElementById('tab-btn-simulator'));
+      this.updateSim();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+
+    filterList: function(type) {
+      currentListType = type;
+      var btns = document.querySelectorAll('#tab-partsList .filter-btn');
+      btns.forEach(function(b) { b.classList.remove('active'); });
+      var btn = document.getElementById('f-' + type);
+      if(btn) btn.classList.add('active');
+      this.renderList();
+    },
+
+    sortBy: function(key) {
+      if(sortKey === key) {
+        sortDesc = !sortDesc;
+      } else {
+        sortKey = key;
+        sortDesc = true;
+      }
+      this.renderList();
+    },
+
+    renderList: function() {
+      var data = currentListType === 'blades' ? blades : (currentListType === 'ratchets' ? ratchets : bits);
+
+      var sorted = data.slice().sort(function(a, b) {
+        var va = a[sortKey];
+        var vb = b[sortKey];
+        if(typeof va === 'string') {
+          return sortDesc ? vb.localeCompare(va) : va.localeCompare(vb);
+        }
+        return sortDesc ? vb - va : va - vb;
+      });
+
+      var thead = document.querySelector('#dataTable thead');
+      var tbody = document.querySelector('#dataTable tbody');
+      if(!thead || !tbody) return;
+
+      var cols = [
+        {k: 'name', l: '名前'}, {k: 'series', l: 'シリーズ'}, {k: 'type', l: 'タイプ'}, {k: 'weight', l: '重量(g)'},
+        {k: 'atk', l: '攻撃'}, {k: 'def', l: '防御'}, {k: 'sta', l: '持久'},
+        {k: 'dash', l: 'ダッシュ'}, {k: 'brst', l: 'バースト'}, {k: 'hgt', l: '高さ'}
+      ];
+
+      var trHead = document.createElement('tr');
+      var thImg = document.createElement('th');
+      thImg.style.textAlign = 'center';
+      thImg.textContent = 'タイプ';
+      trHead.appendChild(thImg);
+
+      cols.forEach(function(col) {
+        var th = document.createElement('th');
+        var arrow = sortKey === col.k ? (sortDesc ? ' ▼' : ' ▲') : '';
+        th.textContent = col.l + arrow;
+        th.onclick = function() { app.sortBy(col.k); };
+        trHead.appendChild(th);
+      });
+
+      thead.innerHTML = '';
+      thead.appendChild(trHead);
+
+      tbody.innerHTML = '';
+      sorted.forEach(function(item) {
+        var tr = document.createElement('tr');
+
+        var tdImg = document.createElement('td');
+        tdImg.innerHTML = '<div class="part-icon-sm">' + createSVGIcon(item.type) + '</div>';
+        tr.appendChild(tdImg);
+
+        cols.forEach(function(col) {
+          var td = document.createElement('td');
+          var val = item[col.k] !== undefined ? item[col.k] : '-';
+          if(col.k === 'weight') val = Number(val).toFixed(1);
+          td.textContent = val;
+          tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+      });
+    }
+  };
+
+  // 即時初期化実行
+  function init() {
+    populateSelects();
+    app.updateSim();
+    app.renderList();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>
