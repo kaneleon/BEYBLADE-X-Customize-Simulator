@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>BEYBLADE X 物理補正カスタムシミュレーター (iPhone完全動作保証版)</title>
+<title>BEYBLADE X 物理補正カスタムシミュレーター (画像カスタマイズ版)</title>
 <style>
   :root {
     --primary: #00f3ff;
@@ -73,7 +73,6 @@
     margin-top: 4px;
   }
 
-  /* セレクトボックスのiOS自動ズームを完全に防止するため16px固定 */
   select, button, input {
     font-size: 16px !important;
     touch-action: manipulation;
@@ -114,7 +113,6 @@
     display: block;
   }
 
-  /* グリッドレイアウト */
   .grid-3 {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
@@ -167,16 +165,13 @@
     color: #ffffff;
     border-radius: 8px;
     padding: 8px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     outline: none;
-  }
-  .select-card select:focus {
-    border-color: var(--primary);
   }
 
   .img-box {
-    width: 100px;
-    height: 100px;
+    width: 110px;
+    height: 110px;
     background-color: #000;
     border-radius: 10px;
     border: 2px solid var(--border-color);
@@ -185,12 +180,53 @@
     justify-content: center;
     overflow: hidden;
     position: relative;
+    margin-bottom: 10px;
   }
 
-  /* SVGパーツ表示 */
+  .img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* 画像アップロードコントロールボタン */
+  .img-control-btns {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .upload-label-btn {
+    flex: 1;
+    background-color: #222736;
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 6px 4px;
+    border-radius: 6px;
+    font-size: 0.7rem !important;
+    text-align: center;
+    cursor: pointer;
+    display: block;
+  }
+
+  .upload-label-btn:active {
+    background-color: var(--primary);
+    color: #000;
+  }
+
+  .reset-img-btn {
+    background-color: rgba(255, 0, 85, 0.2);
+    border: 1px solid var(--secondary);
+    color: #ff4b4b;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 0.7rem !important;
+    cursor: pointer;
+  }
+
   .svg-icon {
-    width: 70px;
-    height: 70px;
+    width: 75px;
+    height: 75px;
   }
 
   /* 結果カード */
@@ -277,7 +313,6 @@
     margin-top: 12px;
   }
 
-  /* フィルターボタン群 */
   .filter-btns {
     display: flex;
     flex-wrap: wrap;
@@ -305,7 +340,6 @@
     font-weight: bold;
   }
 
-  /* おすすめカード */
   .recommend-grid {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
@@ -378,7 +412,6 @@
     cursor: pointer;
   }
 
-  /* テーブル表示 */
   .table-wrap {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -415,12 +448,17 @@
   }
 
   .part-icon-sm {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto;
+  }
+  .part-icon-sm img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 </style>
 </head>
@@ -428,8 +466,8 @@
 
 <div class="container">
   <header>
-    <h1>BEYBLADE X <span>物理補正シミュレーター</span></h1>
-    <p>100% オフライン完全動作 / 高速レスポンス対応</p>
+    <h1>BEYBLADE X <span>カスタムシミュレーター</span></h1>
+    <p>任意画像アップロード＆端末保存機能対応</p>
   </header>
 
   <nav class="nav-tabs" role="tablist">
@@ -455,6 +493,13 @@
         </div>
         <select id="bladeSelect" onchange="app.updateSim()"></select>
         <div class="img-box" id="bladeImg"></div>
+        <div class="img-control-btns">
+          <label class="upload-label-btn">
+            📷 画像を選択
+            <input type="file" accept="image/*" onchange="app.handleImageUpload('blade', this)" style="display:none;">
+          </label>
+          <button type="button" class="reset-img-btn" onclick="app.resetPartImage('blade')">消去</button>
+        </div>
       </div>
 
       <!-- ラチェット -->
@@ -465,6 +510,13 @@
         </div>
         <select id="ratchetSelect" onchange="app.updateSim()"></select>
         <div class="img-box" id="ratchetImg"></div>
+        <div class="img-control-btns">
+          <label class="upload-label-btn">
+            📷 画像を選択
+            <input type="file" accept="image/*" onchange="app.handleImageUpload('ratchet', this)" style="display:none;">
+          </label>
+          <button type="button" class="reset-img-btn" onclick="app.resetPartImage('ratchet')">消去</button>
+        </div>
       </div>
 
       <!-- ビット -->
@@ -475,6 +527,13 @@
         </div>
         <select id="bitSelect" onchange="app.updateSim()"></select>
         <div class="img-box" id="bitImg"></div>
+        <div class="img-control-btns">
+          <label class="upload-label-btn">
+            📷 画像を選択
+            <input type="file" accept="image/*" onchange="app.handleImageUpload('bit', this)" style="display:none;">
+          </label>
+          <button type="button" class="reset-img-btn" onclick="app.resetPartImage('bit')">消去</button>
+        </div>
       </div>
     </div>
 
@@ -582,6 +641,14 @@
 
   var INFLUENCE = { blade: 1.00, bit: 0.75, ratchet: 0.35 };
 
+  // カスタム画像の保存ストレージ（localStorageと同期）
+  var customImages = {};
+  try {
+    customImages = JSON.parse(localStorage.getItem('bey_custom_images') || '{}');
+  } catch(e) {
+    customImages = {};
+  }
+
   function pseudoRand(seed) {
     var h = 0;
     for (var i = 0; i < seed.length; i++) {
@@ -593,7 +660,6 @@
     };
   }
 
-  // ブレードデータ
   var rawBlades = [
     {name: "ドランソード", series: "BX", type: "アタック", weight: 35.0, shape: "jagged"},
     {name: "ヘルズサイズ", series: "BX", type: "バランス", weight: 33.0, shape: "semi_round"},
@@ -640,7 +706,6 @@
     return Object.assign({}, b, {atk: atk, def: def, sta: sta, dash: dash, brst: brst, hgt: hgt});
   });
 
-  // ラチェットデータ
   var rawRatchets = ["1-60","2-60","3-60","4-60","5-60","7-60","9-60","0-60","1-80","2-80","3-80","4-80","5-80","7-80","9-80","0-80","3-70","4-70","5-70","7-70","9-70","0-70","5-50","7-50","9-50"];
   var ratchets = rawRatchets.map(function(r) {
     var parts = r.split('-');
@@ -658,7 +723,6 @@
     };
   });
 
-  // ビットデータ
   var rawBits = [
     {n: "F (Flat)", t: "アタック"}, {n: "LF (Low Flat)", t: "アタック"}, {n: "GF (Gear Flat)", t: "アタック"}, {n: "T (Taper)", t: "アタック"}, {n: "R (Rush)", t: "アタック"},
     {n: "B (Ball)", t: "スタミナ"}, {n: "DB (Disc Ball)", t: "スタミナ"}, {n: "O (Orb)", t: "スタミナ"}, {n: "W (Wedge)", t: "スタミナ"},
@@ -693,7 +757,6 @@
   var sortKey = 'weight';
   var sortDesc = true;
 
-  // 内蔵用高精細SVG生成関数 (完全スタンドアロン)
   function createSVGIcon(type) {
     var color = '#ff4b4b';
     var pathData = '';
@@ -710,7 +773,7 @@
     } else if (type === 'ラチェット') {
       color = '#8b5cf6';
       pathData = '<rect x="25" y="25" width="50" height="50" rx="10" fill="none" stroke="' + color + '" stroke-width="6"/>';
-    } else { // バランス
+    } else {
       color = '#06b6d4';
       pathData = '<circle cx="50" cy="50" r="35" fill="none" stroke="' + color + '" stroke-width="5"/><polygon points="50,20 80,75 20,75" fill="none" stroke="' + color + '" stroke-width="5"/>';
     }
@@ -718,7 +781,15 @@
     return '<svg class="svg-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">' + pathData + '</svg>';
   }
 
-  // 物理補正計算
+  // パーツの表示HTML取得（カスタム画像があれば優先表示）
+  function renderPartDisplay(category, item) {
+    var key = category + '_' + item.name;
+    if (customImages[key]) {
+      return '<img src="' + customImages[key] + '" alt="' + item.name + '">';
+    }
+    return createSVGIcon(item.type);
+  }
+
   function calculatePhysicsStats(bd, rt, bt) {
     if(!bd || !rt || !bt) return { atk:0, def:0, sta:0, dash:0, brst:0, hgt:0, totalWeight:"0.00", ratchetH:60 };
 
@@ -814,6 +885,60 @@
       }
     },
 
+    // 画像アップロード処理
+    handleImageUpload: function(category, input) {
+      if (!input.files || !input.files[0]) return;
+      var file = input.files[0];
+      var reader = new FileReader();
+
+      var selId = category + 'Select';
+      var selEl = document.getElementById(selId);
+      if(!selEl) return;
+
+      var items = category === 'blade' ? blades : (category === 'ratchet' ? ratchets : bits);
+      var item = items[selEl.value];
+      if(!item) return;
+
+      reader.onload = function(e) {
+        var key = category + '_' + item.name;
+        customImages[key] = e.target.result;
+        try {
+          localStorage.setItem('bey_custom_images', JSON.stringify(customImages));
+        } catch(err) {
+          console.warn('localStorage limit reached', err);
+        }
+        app.updateSim();
+        if(document.getElementById('tab-partsList').classList.contains('active')) {
+          app.renderList();
+        }
+      };
+      reader.readAsDataURL(file);
+      input.value = ''; // Reset input
+    },
+
+    // カスタム画像リセット
+    resetPartImage: function(category) {
+      var selId = category + 'Select';
+      var selEl = document.getElementById(selId);
+      if(!selEl) return;
+
+      var items = category === 'blade' ? blades : (category === 'ratchet' ? ratchets : bits);
+      var item = items[selEl.value];
+      if(!item) return;
+
+      var key = category + '_' + item.name;
+      if(customImages[key]) {
+        delete customImages[key];
+        try {
+          localStorage.setItem('bey_custom_images', JSON.stringify(customImages));
+        } catch(err) {}
+        app.updateSim();
+        if(document.getElementById('tab-partsList').classList.contains('active')) {
+          app.renderList();
+        }
+      }
+    },
+
     updateSim: function() {
       var bSel = document.getElementById('bladeSelect');
       var rSel = document.getElementById('ratchetSelect');
@@ -824,9 +949,9 @@
       var rt = ratchets[rSel.value] || ratchets[0];
       var bt = bits[btSel.value] || bits[0];
 
-      document.getElementById('bladeImg').innerHTML = createSVGIcon(bd.type);
-      document.getElementById('ratchetImg').innerHTML = createSVGIcon(rt.type);
-      document.getElementById('bitImg').innerHTML = createSVGIcon(bt.type);
+      document.getElementById('bladeImg').innerHTML = renderPartDisplay('blade', bd);
+      document.getElementById('ratchetImg').innerHTML = renderPartDisplay('ratchet', rt);
+      document.getElementById('bitImg').innerHTML = renderPartDisplay('bit', bt);
 
       var stats = calculatePhysicsStats(bd, rt, bt);
 
@@ -967,6 +1092,7 @@
     },
 
     renderList: function() {
+      var categorySingular = currentListType === 'blades' ? 'blade' : (currentListType === 'ratchets' ? 'ratchet' : 'bit');
       var data = currentListType === 'blades' ? blades : (currentListType === 'ratchets' ? ratchets : bits);
 
       var sorted = data.slice().sort(function(a, b) {
@@ -991,7 +1117,7 @@
       var trHead = document.createElement('tr');
       var thImg = document.createElement('th');
       thImg.style.textAlign = 'center';
-      thImg.textContent = 'タイプ';
+      thImg.textContent = '画像';
       trHead.appendChild(thImg);
 
       cols.forEach(function(col) {
@@ -1010,7 +1136,7 @@
         var tr = document.createElement('tr');
 
         var tdImg = document.createElement('td');
-        tdImg.innerHTML = '<div class="part-icon-sm">' + createSVGIcon(item.type) + '</div>';
+        tdImg.innerHTML = '<div class="part-icon-sm">' + renderPartDisplay(categorySingular, item) + '</div>';
         tr.appendChild(tdImg);
 
         cols.forEach(function(col) {
@@ -1026,7 +1152,6 @@
     }
   };
 
-  // 即時初期化実行
   function init() {
     populateSelects();
     app.updateSim();
