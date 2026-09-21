@@ -17,12 +17,20 @@
     --text-main: #f0f2f5;
     --text-muted: #94a3b8;
 
+    /* ステータスバー用カラー */
     --attack-color: #ff4b4b;
     --defense-color: #10b981;
     --stamina-color: #f59e0b;
     --dash-color: #06b6d4;
     --burst-color: #a855f7;
     --height-color: #8b5cf6;
+
+    /* タイプ別枠色指定 */
+    --type-attack: #3b82f6;   /* アタック：青 */
+    --type-stamina: #eab308;  /* スタミナ：黄 */
+    --type-defense: #10b981;  /* ディフェンス：緑 */
+    --type-balance: #ff4b4b;  /* バランス：赤 */
+    --type-other: #a855f7;    /* その他：紫 */
     
     --sab: env(safe-area-inset-bottom, 0px);
     --sat: env(safe-area-inset-top, 0px);
@@ -169,18 +177,20 @@
     outline: none;
   }
 
+  /* 画像表示枠 */
   .img-box {
     width: 110px;
     height: 110px;
     background-color: #000;
     border-radius: 10px;
-    border: 2px solid var(--border-color);
+    border: 3px solid var(--border-color);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     position: relative;
     margin-bottom: 10px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
   }
 
   .img-box img {
@@ -446,12 +456,16 @@
   }
 
   .part-icon-sm {
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto;
+    border-radius: 6px;
+    border: 2px solid var(--border-color);
+    overflow: hidden;
+    background-color: #000;
   }
   .part-icon-sm img {
     width: 100%;
@@ -465,7 +479,7 @@
 <div class="container">
   <header>
     <h1>BEYBLADE X <span>全パーツ型番完全網羅シミュレーター</span></h1>
-    <p>画像アップロード永続保存機能 / 型番（BX/UX/CX）対応</p>
+    <p>自動圧縮永続保存 / タイプ別カラー枠表示対応</p>
   </header>
 
   <nav class="nav-tabs" role="tablist">
@@ -639,10 +653,17 @@
 
   var INFLUENCE = { blade: 1.00, bit: 0.75, ratchet: 0.35 };
 
-  // localStorageから登録済み画像をロード（永続保存）
+  function getTypeColor(type) {
+    if (type === 'アタック') return 'var(--type-attack)';
+    if (type === 'スタミナ') return 'var(--type-stamina)';
+    if (type === 'ディフェンス') return 'var(--type-defense)';
+    if (type === 'バランス') return 'var(--type-balance)';
+    return 'var(--type-other)';
+  }
+
   var customImages = {};
   try {
-    customImages = JSON.parse(localStorage.getItem('bey_custom_images_v2') || '{}');
+    customImages = JSON.parse(localStorage.getItem('bey_custom_images_v3') || '{}');
   } catch(e) {
     customImages = {};
   }
@@ -658,7 +679,7 @@
     };
   }
 
-  // ブレードデータ（製品型番・シリーズ完全対応）
+  // ブレードデータ（UX-19, UX-20, UX-21 追加完了）
   var rawBlades = [
     {code: "BX-01", name: "ドランソード", series: "BX", type: "アタック", weight: 35.0, shape: "jagged"},
     {code: "BX-02", name: "ヘルズサイズ", series: "BX", type: "バランス", weight: 33.0, shape: "semi_round"},
@@ -705,6 +726,9 @@
     {code: "UX-16", name: "クロックミラージュ", series: "UX", type: "スタミナ", weight: 36.0, shape: "round"},
     {code: "UX-17", name: "メテオドラグーン", series: "UX", type: "アタック", weight: 38.0, shape: "heavy_jagged"},
     {code: "UX-18", name: "マミーカース", series: "UX", type: "バランス", weight: 35.0, shape: "semi_round"},
+    {code: "UX-19", name: "バレットグリフォン", series: "UX", type: "バランス", weight: 36.0, shape: "semi_round"},
+    {code: "UX-20", name: "グローリーワルキューレ", series: "UX", type: "アタック", weight: 38.0, shape: "heavy_jagged"},
+    {code: "UX-21", name: "ヘルズネザー", series: "UX", type: "バランス", weight: 36.0, shape: "semi_round"},
     {code: "CX-01", name: "ドランブレイブ", series: "CX", type: "アタック", weight: 40.0, shape: "heavy_jagged"},
     {code: "CX-02", name: "ウィザードアーク", series: "CX", type: "スタミナ", weight: 36.0, shape: "round"},
     {code: "CX-03", name: "ペルセウスダーク", series: "CX", type: "ディフェンス", weight: 38.0, shape: "heavy_round"},
@@ -748,7 +772,7 @@
     return Object.assign({}, b, {atk: atk, def: def, sta: sta, dash: dash, brst: brst, hgt: hgt});
   });
 
-  // ラチェット全種
+  // ラチェットデータ
   var rawRatchets = [
     "1-50","1-60","1-70","1-80","2-60","2-70","2-80","3-60","3-65","3-70","3-80","3-85",
     "4-50","4-55","4-60","4-70","4-80","5-50","5-55","5-60","5-70","5-80","6-60","6-70",
@@ -771,7 +795,7 @@
     };
   });
 
-  // ビット全種
+  // ビットデータ
   var rawBits = [
     {n: "F (Flat)", t: "アタック"}, {n: "LF (Low Flat)", t: "アタック"}, {n: "GF (Gear Flat)", t: "アタック"}, {n: "T (Taper)", t: "アタック"}, {n: "HT (High Taper)", t: "アタック"}, {n: "R (Rush)", t: "アタック"}, {n: "Q (Quake)", t: "アタック"}, {n: "Z (Zap)", t: "アタック"}, {n: "FF (Free Flat)", t: "アタック"}, {n: "C (Cyclone)", t: "アタック"}, {n: "A (Accel)", t: "アタック"}, {n: "RA (Rubber Accel)", t: "アタック"}, {n: "LR (Low Rush)", t: "アタック"}, {n: "UF (Ultra Flat)", t: "アタック"},
     {n: "B (Ball)", t: "スタミナ"}, {n: "DB (Disc Ball)", t: "スタミナ"}, {n: "GB (Gear Ball)", t: "スタミナ"}, {n: "O (Orb)", t: "スタミナ"}, {n: "LO (Low Orb)", t: "スタミナ"}, {n: "FB (Free Ball)", t: "スタミナ"}, {n: "WB (Wall Ball)", t: "スタミナ"}, {n: "Y (Yielding)", t: "スタミナ"}, {n: "W (Wedge)", t: "スタミナ"}, {n: "G (Gear)", t: "スタミナ"}, {n: "DS (Disc Stamina)", t: "スタミナ"},
@@ -807,30 +831,24 @@
   var sortDesc = true;
 
   function createSVGIcon(type) {
-    var color = '#ff4b4b';
+    var color = getTypeColor(type);
     var pathData = '';
 
     if (type === 'アタック') {
-      color = '#ff4b4b';
       pathData = '<polygon points="50,15 65,35 90,35 70,55 80,85 50,65 20,85 30,55 10,35 35,35" fill="none" stroke="' + color + '" stroke-width="6"/>';
     } else if (type === 'ディフェンス') {
-      color = '#10b981';
       pathData = '<polygon points="50,15 85,30 85,70 50,90 15,70 15,30" fill="none" stroke="' + color + '" stroke-width="6"/>';
     } else if (type === 'スタミナ') {
-      color = '#f59e0b';
       pathData = '<circle cx="50" cy="50" r="35" fill="none" stroke="' + color + '" stroke-width="6"/><circle cx="50" cy="50" r="15" fill="' + color + '"/>';
     } else if (type === 'ラチェット') {
-      color = '#8b5cf6';
       pathData = '<rect x="25" y="25" width="50" height="50" rx="10" fill="none" stroke="' + color + '" stroke-width="6"/>';
     } else {
-      color = '#06b6d4';
       pathData = '<circle cx="50" cy="50" r="35" fill="none" stroke="' + color + '" stroke-width="5"/><polygon points="50,20 80,75 20,75" fill="none" stroke="' + color + '" stroke-width="5"/>';
     }
 
     return '<svg class="svg-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">' + pathData + '</svg>';
   }
 
-  // パーツ表示用HTML（画像があれば優先表示）
   function renderPartDisplay(category, item) {
     var key = category + '_' + item.name;
     if (customImages[key]) {
@@ -924,7 +942,7 @@
       tabButtons.forEach(function(el) { el.classList.remove('active'); });
 
       var target = document.getElementById('tab-' + tabId);
-      if(target) target.classList.add('active');
+      if(target) target.classList.remove('active');
       if(btnEl) btnEl.classList.add('active');
 
       if (tabId === 'recommend') {
@@ -938,7 +956,6 @@
       if (!input.files || !input.files[0]) return;
       var file = input.files[0];
 
-      // リサイズ処理を行い容量削減＋localStorageへの確実な保存を行う
       var reader = new FileReader();
       reader.onload = function(e) {
         var img = new Image();
@@ -947,7 +964,14 @@
           var ctx = canvas.getContext('2d');
           canvas.width = 150;
           canvas.height = 150;
-          ctx.drawImage(img, 0, 0, 150, 150);
+
+          ctx.fillStyle = '#000000';
+          ctx.fillRect(0, 0, 150, 150);
+
+          var scale = Math.min(150 / img.width, 150 / img.height);
+          var x = (150 - img.width * scale) / 2;
+          var y = (150 - img.height * scale) / 2;
+          ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
 
           var resizedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
 
@@ -963,9 +987,9 @@
           customImages[key] = resizedDataUrl;
 
           try {
-            localStorage.setItem('bey_custom_images_v2', JSON.stringify(customImages));
+            localStorage.setItem('bey_custom_images_v3', JSON.stringify(customImages));
           } catch(err) {
-            alert('保存容量の上限に達しました。不要な画像を消去してください。');
+            alert('保存容量の上限に達しました。');
           }
 
           app.updateSim();
@@ -992,7 +1016,7 @@
       if(customImages[key]) {
         delete customImages[key];
         try {
-          localStorage.setItem('bey_custom_images_v2', JSON.stringify(customImages));
+          localStorage.setItem('bey_custom_images_v3', JSON.stringify(customImages));
         } catch(err) {}
         app.updateSim();
         if(document.getElementById('tab-partsList').classList.contains('active')) {
@@ -1011,9 +1035,26 @@
       var rt = ratchets[rSel.value] || ratchets[0];
       var bt = bits[btSel.value] || bits[0];
 
-      document.getElementById('bladeImg').innerHTML = renderPartDisplay('blade', bd);
-      document.getElementById('ratchetImg').innerHTML = renderPartDisplay('ratchet', rt);
-      document.getElementById('bitImg').innerHTML = renderPartDisplay('bit', bt);
+      var bImgBox = document.getElementById('bladeImg');
+      var rImgBox = document.getElementById('ratchetImg');
+      var btImgBox = document.getElementById('bitImg');
+
+      bImgBox.innerHTML = renderPartDisplay('blade', bd);
+      rImgBox.innerHTML = renderPartDisplay('ratchet', rt);
+      btImgBox.innerHTML = renderPartDisplay('bit', bt);
+
+      var bColor = getTypeColor(bd.type);
+      var rColor = getTypeColor(rt.type);
+      var btColor = getTypeColor(bt.type);
+
+      bImgBox.style.borderColor = bColor;
+      bImgBox.style.boxShadow = '0 0 10px ' + bColor;
+
+      rImgBox.style.borderColor = rColor;
+      rImgBox.style.boxShadow = '0 0 10px ' + rColor;
+
+      btImgBox.style.borderColor = btColor;
+      btImgBox.style.boxShadow = '0 0 10px ' + btColor;
 
       var stats = calculatePhysicsStats(bd, rt, bt);
 
@@ -1198,7 +1239,8 @@
         var tr = document.createElement('tr');
 
         var tdImg = document.createElement('td');
-        tdImg.innerHTML = '<div class="part-icon-sm">' + renderPartDisplay(categorySingular, item) + '</div>';
+        var iconColor = getTypeColor(item.type);
+        tdImg.innerHTML = '<div class="part-icon-sm" style="border-color:' + iconColor + ';">' + renderPartDisplay(categorySingular, item) + '</div>';
         tr.appendChild(tdImg);
 
         cols.forEach(function(col) {
