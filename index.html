@@ -589,6 +589,7 @@
   </main>
 </div>
 
+<!-- JavaScriptコードはすべてこの<script>の中に記述します -->
 <script>
 (function() {
   'use strict';
@@ -603,7 +604,7 @@
     return 'var(--type-other)';
   }
 
-  // ブレードデータ（全83種類）
+  // ブレードデータ
   var blades = [
     {code:"BX-00", name:"コバルトドレイク", series:"BX", type:"アタック", weight:37.2, atk:70, def:35, sta:25, dash:5, brst:6, hgt:3, shape:"jagged"},
     {code:"BX-00", name:"フェニックスフェザー", series:"BX", type:"アタック", weight:33.5, atk:50, def:20, sta:30, dash:5, brst:4, hgt:3, shape:"jagged"},
@@ -690,7 +691,7 @@
     {code:"CX-19", name:"クロコトレッド", series:"CX", type:"ディフェンス", weight:38.2, atk:15, def:67, sta:18, dash:1, brst:7, hgt:3, shape:"round"}
   ];
 
-  // ラチェットデータ（全22種類）
+  // ラチェットデータ
   var ratchets = [
     {code:"R", name:"0-60", series:"全般", type:"ラチェット", weight:6.8, atk:3, def:14, sta:13, dash:0, brst:8, hgt:4, bladesCount:0, heightVal:60},
     {code:"R", name:"0-70", series:"全般", type:"ラチェット", weight:7.0, atk:3, def:13, sta:14, dash:0, brst:6, hgt:6, bladesCount:0, heightVal:70},
@@ -716,7 +717,7 @@
     {code:"R", name:"M-85", series:"全般", type:"ラチェット", weight:10.5, atk:15, def:15, sta:5, dash:0, brst:3, hgt:9, bladesCount:0, heightVal:85}
   ];
 
-  // ビットデータ（全52種類）
+  // ビットデータ
   var bits = [
     {code:"Bit", name:"F (Flat)", series:"全般", type:"アタック", weight:2.3, atk:40, def:15, sta:10, dash:35, brst:80, hgt:3},
     {code:"Bit", name:"T (Taper)", series:"全般", type:"バランス", weight:2.3, atk:35, def:20, sta:20, dash:25, brst:80, hgt:3},
@@ -776,7 +777,6 @@
   var sortKey = 'weight';
   var sortDesc = true;
 
-  // タイプ別SVGイメージアイコン生成
   function createSVGIcon(type) {
     var color = getTypeColor(type);
     var pathData = '';
@@ -796,31 +796,20 @@
     return '<svg class="svg-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">' + pathData + '</svg>';
   }
 
-  // 多重拡張子・命名パターン対応の画像要素生成
   function renderPartDisplay(category, item) {
     if(!item) return '';
     
-    var cleanCode = (item.code || '').replace('-', '').toLowerCase(); // 例: bx01
-    var codeUpper = (item.code || '').toUpperCase();                  // 例: BX-01
-    var cleanName = item.name.split(' ')[0];                           // 例: F (Bit用)
+    var cleanCode = (item.code || '').replace('-', '').toLowerCase();
+    var codeUpper = (item.code || '').toUpperCase();
+    var cleanName = item.name.split(' ')[0];
 
     var baseNames = [];
     if (category === 'blade') {
-      baseNames = [
-        cleanCode,                     // bx01 (型番のみ小文字)
-        codeUpper,                     // BX-01 (型番のみ大文字)
-        cleanCode + item.name          // bx01ドランソード (フルネーム)
-      ];
+      baseNames = [cleanCode, codeUpper, cleanCode + item.name];
     } else if (category === 'ratchet') {
-      baseNames = [
-        item.name,                     // 3-60
-        item.name.replace('-', '')     // 360
-      ];
+      baseNames = [item.name, item.name.replace('-', '')];
     } else if (category === 'bit') {
-      baseNames = [
-        cleanName,                     // F
-        cleanName.toLowerCase()        // f
-      ];
+      baseNames = [cleanName, cleanName.toLowerCase()];
     }
 
     var exts = ['.png', '.jpg', '.jpeg', '.webp'];
@@ -917,7 +906,6 @@
   }
 
   window.app = {
-    // 順次画像探索ハンドラー
     handleImgError: function(img) {
       try {
         var rawCandidates = img.getAttribute('data-candidates') || '';
