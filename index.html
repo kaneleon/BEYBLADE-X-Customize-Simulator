@@ -5,32 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>BEYBLADE X 物理補正カスタムシミュレーター (データ完全同期版)</title>
+<title>BEYBLADE X 物理補正カスタムシミュレーター (高視認性版)</title>
 <style>
   :root {
-    --primary: #00f3ff;
-    --secondary: #ff0055;
-    --bg-color: #0b0c10;
-    --card-bg: #161821;
-    --card-inner: #0f1118;
-    --border-color: #2a2e3d;
-    --text-main: #f0f2f5;
-    --text-muted: #94a3b8;
+    /* 蛍光色を廃止し、目に優しい高コントラスト配色へ変更 */
+    --primary: #3b82f6;       /* メインアクセント：標準ブルー */
+    --secondary: #e11d48;     /* サブアクセント：ローズレッド */
+    --bg-color: #0f172a;      /* 背景：落ち着いたダークスレート */
+    --card-bg: #1e293b;       /* カード背景：やや明るいスレート */
+    --card-inner: #0f172a;    /* カード内背景 */
+    --border-color: #334155;  /* 枠線色 */
+    --text-main: #f8fafc;     /* メイン文字：見やすいクリアホワイト */
+    --text-muted: #94a3b8;    /* サブ文字：グレー */
 
-    /* ステータスバー用カラー */
-    --attack-color: #ff4b4b;
-    --defense-color: #10b981;
-    --stamina-color: #f59e0b;
-    --dash-color: #06b6d4;
-    --burst-color: #a855f7;
-    --height-color: #8b5cf6;
+    /* ステータスバー用カラー（高視認性カラー） */
+    --attack-color: #ef4444;   /* 攻撃：レッド */
+    --defense-color: #10b981;  /* 防御：エメラルドグリーン */
+    --stamina-color: #f59e0b;  /* 持久：アンバーイエロー */
+    --dash-color: #0284c7;     /* ダッシュ：シアンブルー */
+    --burst-color: #8b5cf6;    /* バースト耐性：パープル */
+    --height-color: #6366f1;   /* 全高：インディゴ */
 
-    /* タイプ別枠色指定 */
-    --type-attack: #3b82f6;   /* アタック：青 */
-    --type-stamina: #eab308;  /* スタミナ：黄 */
-    --type-defense: #10b981;  /* ディフェンス：緑 */
-    --type-balance: #ff4b4b;  /* バランス：赤 */
-    --type-other: #a855f7;    /* その他：紫 */
+    /* タイプ別枠色 */
+    --type-attack: #2563eb;    /* アタック：青 */
+    --type-stamina: #d97706;   /* スタミナ：橙黄 */
+    --type-defense: #059669;   /* ディフェンス：緑 */
+    --type-balance: #dc2626;   /* バランス：赤 */
+    --type-other: #7c3aed;     /* その他：紫 */
     
     --sab: env(safe-area-inset-bottom, 0px);
     --sat: env(safe-area-inset-top, 0px);
@@ -72,11 +73,10 @@
 
   header h1 span {
     color: var(--primary);
-    text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
   }
 
   header p {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
     margin-top: 4px;
   }
@@ -96,7 +96,7 @@
   .tab-btn {
     flex: 1;
     padding: 10px 4px;
-    background-color: #1e2230;
+    background-color: #334155;
     border: 1px solid var(--border-color);
     color: var(--text-main);
     border-radius: 10px;
@@ -108,9 +108,8 @@
 
   .tab-btn.active {
     background-color: var(--primary);
-    color: #050b14;
+    color: #ffffff;
     border-color: var(--primary);
-    box-shadow: 0 0 12px rgba(0, 243, 255, 0.3);
   }
 
   .tab-content {
@@ -140,7 +139,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: 0 0 15px rgba(0, 243, 255, 0.05);
   }
 
   .select-card-header {
@@ -154,12 +152,12 @@
   .select-card label {
     font-size: 0.85rem;
     font-weight: bold;
-    color: var(--primary);
+    color: var(--text-main);
   }
 
   .badge-influence {
     font-size: 0.65rem;
-    background-color: #222736;
+    background-color: #0f172a;
     color: var(--text-muted);
     padding: 2px 6px;
     border-radius: 4px;
@@ -187,7 +185,7 @@
     justify-content: center;
     overflow: hidden;
     position: relative;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: border-color 0.3s ease;
   }
 
   .img-box img {
@@ -220,7 +218,7 @@
   .result-header h2 {
     font-size: 0.95rem;
     font-weight: bold;
-    color: var(--secondary);
+    color: var(--text-main);
   }
 
   .total-weight-box {
@@ -262,7 +260,7 @@
   .stat-bar-bg {
     width: 100%;
     height: 8px;
-    background-color: #1a1e2b;
+    background-color: #0f172a;
     border-radius: 4px;
     overflow: hidden;
   }
@@ -274,7 +272,7 @@
   }
 
   .physics-notes {
-    background-color: rgba(15, 17, 24, 0.9);
+    background-color: rgba(15, 23, 42, 0.9);
     padding: 10px 12px;
     border-radius: 8px;
     border-left: 3px solid var(--primary);
@@ -295,7 +293,7 @@
     flex: 1;
     min-width: 90px;
     padding: 8px 10px;
-    background-color: transparent;
+    background-color: #334155;
     border: 1px solid var(--border-color);
     color: var(--text-main);
     border-radius: 20px;
@@ -305,8 +303,8 @@
   }
 
   .filter-btn.active {
-    background-color: #2563eb;
-    border-color: #60a5fa;
+    background-color: var(--primary);
+    border-color: var(--primary);
     color: #ffffff;
     font-weight: bold;
   }
@@ -375,7 +373,7 @@
     width: 100%;
     padding: 10px;
     background-color: var(--primary);
-    color: #050b14;
+    color: #ffffff;
     border: none;
     border-radius: 8px;
     font-weight: bold;
@@ -400,8 +398,8 @@
   }
 
   th {
-    background-color: #1e2230;
-    color: var(--text-muted);
+    background-color: #334155;
+    color: var(--text-main);
     padding: 10px 8px;
     position: sticky;
     top: 0;
@@ -413,7 +411,7 @@
 
   td {
     padding: 8px;
-    border-bottom: 1px solid rgba(42, 46, 61, 0.5);
+    border-bottom: 1px solid rgba(51, 65, 85, 0.5);
     background-color: var(--card-bg);
     white-space: nowrap;
   }
@@ -442,7 +440,7 @@
 <div class="container">
   <header>
     <h1>BEYBLADE X <span>全パーツ型番完全網羅シミュレーター</span></h1>
-    <p>実データ同期版 / フォルダ画像自動探索 / タイプ別カラー表示</p>
+    <p>実データ同期版 / 高視認性デザイン / 型番00個別識別対応</p>
   </header>
 
   <nav class="nav-tabs" role="tablist">
@@ -589,7 +587,6 @@
   </main>
 </div>
 
-<!-- JavaScriptコードはすべてこの<script>の中に記述します -->
 <script>
 (function() {
   'use strict';
@@ -604,7 +601,7 @@
     return 'var(--type-other)';
   }
 
-  // ブレードデータ
+  // ブレードデータ（全83種類）
   var blades = [
     {code:"BX-00", name:"コバルトドレイク", series:"BX", type:"アタック", weight:37.2, atk:70, def:35, sta:25, dash:5, brst:6, hgt:3, shape:"jagged"},
     {code:"BX-00", name:"フェニックスフェザー", series:"BX", type:"アタック", weight:33.5, atk:50, def:20, sta:30, dash:5, brst:4, hgt:3, shape:"jagged"},
@@ -691,7 +688,7 @@
     {code:"CX-19", name:"クロコトレッド", series:"CX", type:"ディフェンス", weight:38.2, atk:15, def:67, sta:18, dash:1, brst:7, hgt:3, shape:"round"}
   ];
 
-  // ラチェットデータ
+  // ラチェットデータ（全22種類）
   var ratchets = [
     {code:"R", name:"0-60", series:"全般", type:"ラチェット", weight:6.8, atk:3, def:14, sta:13, dash:0, brst:8, hgt:4, bladesCount:0, heightVal:60},
     {code:"R", name:"0-70", series:"全般", type:"ラチェット", weight:7.0, atk:3, def:13, sta:14, dash:0, brst:6, hgt:6, bladesCount:0, heightVal:70},
@@ -717,7 +714,7 @@
     {code:"R", name:"M-85", series:"全般", type:"ラチェット", weight:10.5, atk:15, def:15, sta:5, dash:0, brst:3, hgt:9, bladesCount:0, heightVal:85}
   ];
 
-  // ビットデータ
+  // ビットデータ（全52種類）
   var bits = [
     {code:"Bit", name:"F (Flat)", series:"全般", type:"アタック", weight:2.3, atk:40, def:15, sta:10, dash:35, brst:80, hgt:3},
     {code:"Bit", name:"T (Taper)", series:"全般", type:"バランス", weight:2.3, atk:35, def:20, sta:20, dash:25, brst:80, hgt:3},
@@ -796,20 +793,32 @@
     return '<svg class="svg-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">' + pathData + '</svg>';
   }
 
+  // ★「00」型番問題に対応した画像探索ロジック
   function renderPartDisplay(category, item) {
     if(!item) return '';
     
-    var cleanCode = (item.code || '').replace('-', '').toLowerCase();
-    var codeUpper = (item.code || '').toUpperCase();
-    var cleanName = item.name.split(' ')[0];
+    var cleanCode = (item.code || '').replace('-', '').toLowerCase(); // 例: bx00
+    var codeUpper = (item.code || '').toUpperCase();                  // 例: BX-00
+    var cleanName = item.name.split(' ')[0];                           // 例: コバルトドレイク
 
     var baseNames = [];
     if (category === 'blade') {
-      baseNames = [cleanCode, codeUpper, cleanCode + item.name];
+      baseNames = [
+        cleanCode + '_' + cleanName,       /* 1優先: bx00_コバルトドレイク (00型番用) */
+        cleanCode + item.name,             /* 2優先: bx00コバルトドレイク */
+        cleanCode,                         /* 3優先: bx01 (00以外の通常の型番) */
+        codeUpper                          /* 4優先: BX-01 */
+      ];
     } else if (category === 'ratchet') {
-      baseNames = [item.name, item.name.replace('-', '')];
+      baseNames = [
+        item.name,                         /* 例: 3-60 */
+        item.name.replace('-', '')         /* 例: 360 */
+      ];
     } else if (category === 'bit') {
-      baseNames = [cleanName, cleanName.toLowerCase()];
+      baseNames = [
+        cleanName,                         /* 例: F */
+        cleanName.toLowerCase()            /* 例: f */
+      ];
     }
 
     var exts = ['.png', '.jpg', '.jpeg', '.webp'];
@@ -978,13 +987,8 @@
       var btColor = getTypeColor(bt.type);
 
       bImgBox.style.borderColor = bColor;
-      bImgBox.style.boxShadow = '0 0 10px ' + bColor;
-
       rImgBox.style.borderColor = rColor;
-      rImgBox.style.boxShadow = '0 0 10px ' + rColor;
-
       btImgBox.style.borderColor = btColor;
-      btImgBox.style.boxShadow = '0 0 10px ' + btColor;
 
       var stats = calculatePhysicsStats(bd, rt, bt);
 
