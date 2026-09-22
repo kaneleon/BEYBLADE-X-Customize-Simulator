@@ -440,7 +440,7 @@
 <div class="container">
   <header>
     <h1>BEYBLADE X <span>全パーツ型番完全網羅シミュレーター</span></h1>
-    <p>実データ同期版 / 高視認性デザイン / 強化型画像探索エンジン搭載</p>
+    <p>実データ同期版 / 高視認性デザイン / 高速画像最適化版</p>
   </header>
 
   <nav class="nav-tabs" role="tablist">
@@ -793,30 +793,31 @@
     return '<svg class="svg-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">' + pathData + '</svg>';
   }
 
-  // ★ 強化版画像探索機能（相対パス `./` や大文字拡張子 `.PNG` も補完）
+  // ★ 爆速・軽量化した画像探索機能
   function renderPartDisplay(category, item) {
     if(!item) return '';
     
-    var cleanCode = (item.code || '').replace('-', '').toLowerCase(); // 例: bx00
-    var codeUpper = (item.code || '').toUpperCase();                  // 例: BX-00
-    var cleanName = item.name.split(' ')[0];                           // 例: コバルトドレイク
+    var cleanCode = (item.code || '').replace('-', '').toLowerCase(); // 例: bx00, bx01
+    var codeUpper = (item.code || '').toUpperCase();                  // 例: BX-00, BX-01
+    var cleanName = item.name.split(' ')[0];                           // 例: ドランソード
 
     var baseNames = [];
     if (category === 'blade') {
+      // 1優先: imgKeyがある場合（00パーツ用 例: bx00_cobalt）
       if (item.imgKey) {
-        baseNames.push(cleanCode + '_' + item.imgKey.toLowerCase());  // 1: bx00_cobalt
+        baseNames.push(cleanCode + '_' + item.imgKey.toLowerCase());
       }
-      baseNames.push(cleanCode + '_' + cleanName);                   // 2: bx00_コバルトドレイク
-      baseNames.push(cleanCode + item.name);                         // 3: bx00コバルトドレイク
-      baseNames.push(cleanCode);                                     // 4: bx01
-      baseNames.push(codeUpper);                                     // 5: BX-01
+      // 2優先: シンプルな型番（例: bx01, bx02, ux01）★ここを最優先にすることで一発ヒット！
+      baseNames.push(cleanCode);
+      baseNames.push(codeUpper);                                     // 3優先: BX-01
+      baseNames.push(cleanCode + '_' + cleanName);                   // 4優先: bx01_ドランソード（旧互換）
     } else if (category === 'ratchet') {
       baseNames = [item.name, item.name.replace('-', '')];
     } else if (category === 'bit') {
       baseNames = [cleanName, cleanName.toLowerCase()];
     }
 
-    var exts = ['.png', '.PNG', '.jpg', '.JPG', '.jpeg', '.webp'];
+    var exts = ['.jpg', '.png', '.webp', '.jpeg', '.JPG', '.PNG'];
     var prefixes = ['images/', './images/'];
     var candidates = [];
 
@@ -913,23 +914,18 @@
   }
 
   window.app = {
-    // デバッグログ出力機能付き画像エラーハンドラー
     handleImgError: function(img) {
       try {
         var rawCandidates = img.getAttribute('data-candidates') || '';
         var candidates = rawCandidates.split('|');
         var idx = parseInt(img.getAttribute('data-idx') || '0', 10);
         
-        // 失敗したパスをブラウザのコンソールに記録
-        console.warn('画像読み込み失敗:', candidates[idx]);
-
         var nextIdx = idx + 1;
 
         if (candidates[nextIdx] && candidates[nextIdx] !== '') {
           img.setAttribute('data-idx', nextIdx);
           img.src = candidates[nextIdx];
         } else {
-          console.error('すべての画像候補が読み込めませんでした。SVG表示へ切り替えます:', img.alt);
           img.onerror = null;
           var type = img.getAttribute('data-type') || 'その他';
           if (img.parentElement) {
@@ -1099,6 +1095,7 @@
           card.appendChild(rankBadge);
           card.appendChild(title);
           card.appendChild(detail);
+          card.appendChild(scoreDiv);
           card.appendChild(scoreDiv);
           card.appendChild(applyBtn);
 
