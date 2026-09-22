@@ -134,7 +134,7 @@
 
   .select-card {
     background-color: var(--card-bg);
-    padding: 12px;
+    padding: 14px 12px;
     border-radius: 12px;
     border: 1px solid var(--border-color);
     display: flex;
@@ -148,7 +148,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
   }
 
   .select-card label {
@@ -172,7 +172,7 @@
     color: #ffffff;
     border-radius: 8px;
     padding: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     outline: none;
   }
 
@@ -187,7 +187,6 @@
     justify-content: center;
     overflow: hidden;
     position: relative;
-    margin-bottom: 10px;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
   }
 
@@ -195,40 +194,6 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
-  }
-
-  .img-control-btns {
-    display: flex;
-    gap: 6px;
-    width: 100%;
-  }
-
-  .upload-label-btn {
-    flex: 1;
-    background-color: #222736;
-    border: 1px solid var(--border-color);
-    color: var(--text-main);
-    padding: 6px 4px;
-    border-radius: 6px;
-    font-size: 0.7rem !important;
-    text-align: center;
-    cursor: pointer;
-    display: block;
-  }
-
-  .upload-label-btn:active {
-    background-color: var(--primary);
-    color: #000;
-  }
-
-  .reset-img-btn {
-    background-color: rgba(255, 0, 85, 0.2);
-    border: 1px solid var(--secondary);
-    color: #ff4b4b;
-    padding: 6px 8px;
-    border-radius: 6px;
-    font-size: 0.7rem !important;
-    cursor: pointer;
   }
 
   .svg-icon {
@@ -477,7 +442,7 @@
 <div class="container">
   <header>
     <h1>BEYBLADE X <span>全パーツ型番完全網羅シミュレーター</span></h1>
-    <p>実データ同期版 / 自動圧縮永続保存 / タイプ別カラー枠表示</p>
+    <p>実データ同期版 / フォルダ画像自動探索 / タイプ別カラー表示</p>
   </header>
 
   <nav class="nav-tabs" role="tablist">
@@ -503,13 +468,6 @@
         </div>
         <select id="bladeSelect" onchange="app.updateSim()"></select>
         <div class="img-box" id="bladeImg"></div>
-        <div class="img-control-btns">
-          <label class="upload-label-btn">
-            📷 画像を登録
-            <input type="file" accept="image/*" onchange="app.handleImageUpload('blade', this)" style="display:none;">
-          </label>
-          <button type="button" class="reset-img-btn" onclick="app.resetPartImage('blade')">消去</button>
-        </div>
       </div>
 
       <!-- ラチェット -->
@@ -520,13 +478,6 @@
         </div>
         <select id="ratchetSelect" onchange="app.updateSim()"></select>
         <div class="img-box" id="ratchetImg"></div>
-        <div class="img-control-btns">
-          <label class="upload-label-btn">
-            📷 画像を登録
-            <input type="file" accept="image/*" onchange="app.handleImageUpload('ratchet', this)" style="display:none;">
-          </label>
-          <button type="button" class="reset-img-btn" onclick="app.resetPartImage('ratchet')">消去</button>
-        </div>
       </div>
 
       <!-- ビット -->
@@ -537,13 +488,6 @@
         </div>
         <select id="bitSelect" onchange="app.updateSim()"></select>
         <div class="img-box" id="bitImg"></div>
-        <div class="img-control-btns">
-          <label class="upload-label-btn">
-            📷 画像を登録
-            <input type="file" accept="image/*" onchange="app.handleImageUpload('bit', this)" style="display:none;">
-          </label>
-          <button type="button" class="reset-img-btn" onclick="app.resetPartImage('bit')">消去</button>
-        </div>
       </div>
     </div>
 
@@ -657,13 +601,6 @@
     if (type === 'ディフェンス') return 'var(--type-defense)';
     if (type === 'バランス') return 'var(--type-balance)';
     return 'var(--type-other)';
-  }
-
-  var customImages = {};
-  try {
-    customImages = JSON.parse(localStorage.getItem('bey_custom_images_v3') || '{}');
-  } catch(e) {
-    customImages = {};
   }
 
   // ブレードデータ（全83種類）
@@ -839,6 +776,7 @@
   var sortKey = 'weight';
   var sortDesc = true;
 
+  // タイプ別SVGイメージアイコン生成
   function createSVGIcon(type) {
     var color = getTypeColor(type);
     var pathData = '';
@@ -861,11 +799,6 @@
   // PNG/JPG/JPEG/WEBP 対応の画像要素生成
   function renderPartDisplay(category, item) {
     if(!item) return '';
-    var key = category + '_' + item.name;
-    
-    if (customImages[key]) {
-      return '<img src="' + customImages[key] + '" alt="' + item.name + '">';
-    }
     
     var fileNamePrimary = '';
     var fileNameSecondary = '';
@@ -883,7 +816,7 @@
       fileNameSecondary = cleanBitName.toLowerCase();
     }
 
-    var exts = ['.jpg', '.png', '.jpeg', '.webp'];
+    var exts = ['.png', '.jpg', '.jpeg', '.webp'];
     var candidates = [];
 
     // 優先パスの拡張子候補
@@ -898,9 +831,9 @@
       }
     }
 
-    var candidatesJson = JSON.stringify(candidates).replace(/"/g, '&quot;');
+    var candidatesStr = candidates.join('|');
 
-    return '<img src="' + candidates[0] + '" alt="' + item.name + '" data-candidates="' + candidatesJson + '" data-index="0" data-type="' + item.type + '" onerror="app.nextImg(this)">';
+    return '<img src="' + candidates[0] + '" alt="' + item.name + '" data-candidates="' + candidatesStr + '" data-idx="0" data-type="' + item.type + '" onerror="app.handleImgError(this)">';
   }
 
   function calculatePhysicsStats(bd, rt, bt) {
@@ -980,24 +913,26 @@
   }
 
   window.app = {
-    // 順次画像試行・SVGフォールバック処理
-    nextImg: function(img) {
+    // 安全な画像エラーハンドラー（SVGフォールバック）
+    handleImgError: function(img) {
       try {
-        var candidates = JSON.parse(img.getAttribute('data-candidates') || '[]');
-        var idx = parseInt(img.getAttribute('data-index') || '0', 10) + 1;
-        if (idx < candidates.length) {
-          img.setAttribute('data-index', idx);
+        var rawCandidates = img.getAttribute('data-candidates') || '';
+        var candidates = rawCandidates.split('|');
+        var idx = parseInt(img.getAttribute('data-idx') || '0', 10) + 1;
+
+        if (candidates[idx] && candidates[idx] !== '') {
+          img.setAttribute('data-idx', idx);
           img.src = candidates[idx];
         } else {
           img.onerror = null;
-          var type = img.getAttribute('data-type');
+          var type = img.getAttribute('data-type') || 'その他';
           if (img.parentElement) {
             img.parentElement.innerHTML = createSVGIcon(type);
           }
         }
       } catch(e) {
         img.onerror = null;
-        var type = img.getAttribute('data-type');
+        var type = img.getAttribute('data-type') || 'その他';
         if (img.parentElement) {
           img.parentElement.innerHTML = createSVGIcon(type);
         }
@@ -1025,79 +960,6 @@
         }
       } catch(e) {
         console.error("Tab switch error:", e);
-      }
-    },
-
-    handleImageUpload: function(category, input) {
-      if (!input.files || !input.files[0]) return;
-      var file = input.files[0];
-
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        var img = new Image();
-        img.onload = function() {
-          var canvas = document.createElement('canvas');
-          var ctx = canvas.getContext('2d');
-          canvas.width = 150;
-          canvas.height = 150;
-
-          ctx.fillStyle = '#000000';
-          ctx.fillRect(0, 0, 150, 150);
-
-          var scale = Math.min(150 / img.width, 150 / img.height);
-          var x = (150 - img.width * scale) / 2;
-          var y = (150 - img.height * scale) / 2;
-          ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
-
-          var resizedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
-
-          var selId = category + 'Select';
-          var selEl = document.getElementById(selId);
-          if(!selEl) return;
-
-          var items = category === 'blade' ? blades : (category === 'ratchet' ? ratchets : bits);
-          var item = items[selEl.value];
-          if(!item) return;
-
-          var key = category + '_' + item.name;
-          customImages[key] = resizedDataUrl;
-
-          try {
-            localStorage.setItem('bey_custom_images_v3', JSON.stringify(customImages));
-          } catch(err) {
-            alert('保存容量の上限に達しました。');
-          }
-
-          app.updateSim();
-          if(document.getElementById('tab-partsList').classList.contains('active')) {
-            app.renderList();
-          }
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-      input.value = '';
-    },
-
-    resetPartImage: function(category) {
-      var selId = category + 'Select';
-      var selEl = document.getElementById(selId);
-      if(!selEl) return;
-
-      var items = category === 'blade' ? blades : (category === 'ratchet' ? ratchets : bits);
-      var item = items[selEl.value];
-      if(!item) return;
-
-      var key = category + '_' + item.name;
-      if(customImages[key]) {
-        delete customImages[key];
-        try {
-          localStorage.setItem('bey_custom_images_v3', JSON.stringify(customImages));
-        } catch(err) {}
-        app.updateSim();
-        if(document.getElementById('tab-partsList').classList.contains('active')) {
-          app.renderList();
-        }
       }
     },
 
