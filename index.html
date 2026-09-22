@@ -591,6 +591,7 @@
 (function() {
   'use strict';
 
+  // 各パーツの影響度（必要に応じて数値を変更可能です）
   var INFLUENCE = { blade: 1.00, bit: 0.75, ratchet: 0.35 };
 
   function getTypeColor(type) {
@@ -802,7 +803,6 @@
 
     var baseName = '';
     if (category === 'blade') {
-      // 00番パーツに指定imgKeyがある場合はそれを最優先、通常パーツは型番（bx01など）を直指定
       if (item.imgKey) {
         baseName = item.imgKey;
       } else {
