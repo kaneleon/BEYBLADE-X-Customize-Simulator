@@ -1,7 +1,7 @@
 // グローバル変数にキャッシュ用オブジェクトを追加
 var recCache = {};
 
-generateRecommendations: function(targetKey) {
+function generateRecommendations(targetKey) {
   try {
     var btns = document.querySelectorAll('#tab-recommend .filter-btn');
     btns.forEach(function(b) { b.classList.remove('active'); });
@@ -10,7 +10,7 @@ generateRecommendations: function(targetKey) {
 
     // キャッシュが存在する場合は計算をスキップして描画のみ行う
     if (recCache[targetKey]) {
-      this.renderRecommendations(recCache[targetKey], targetKey);
+      renderRecommendations(recCache[targetKey], targetKey);
       return;
     }
 
@@ -23,15 +23,10 @@ generateRecommendations: function(targetKey) {
           var bt = bits[k];
           var pStats = calculatePhysicsStats(bd, rt, bt);
           var score = targetKey === 'weight' ? Number(pStats.totalWeight) : pStats[targetKey];
-          combos.push({
-            bIdx: i, rIdx: j, btIdx: k,
-            blade: bd, ratchet: rt, bit: bt,
-            score: score, weight: Number(pStats.totalWeight)
-          });
+          combos.push({ bldx: i, rldx: j, btIdx: k, blade: bd, ratchet: rt, bit: bt, score: score, weight: Number(pStats.totalWeight) });
         }
       }
     }
-
     combos.sort(function(a, b) { return (b.score - a.score) || (b.weight - a.weight); });
 
     var topCombos = [];
@@ -47,15 +42,14 @@ generateRecommendations: function(targetKey) {
 
     // 計算結果をキャッシュに保存
     recCache[targetKey] = topCombos;
-    this.renderRecommendations(topCombos, targetKey);
-
+    renderRecommendations(topCombos, targetKey);
   } catch(err) {
     console.error("Recommend error:", err);
   }
-},
+}
 
 // 描画ロジックの分離関数
-renderRecommendations: function(topCombos, targetKey) {
+function renderRecommendations(topCombos, targetKey) {
   var labels = { atk: '攻撃力', def: '防御力', sta: '持久力', dash: 'ダッシュ力', brst: 'バースト耐性', weight: '総重量' };
   var grid = document.getElementById('recommendGrid');
   if(!grid) return;
@@ -63,7 +57,6 @@ renderRecommendations: function(topCombos, targetKey) {
 
   topCombos.forEach(function(c, rank) {
     var scoreText = targetKey === 'weight' ? c.weight.toFixed(2) + ' g' : c.score.toFixed(1) + ' pt';
-
     var card = document.createElement('div');
     card.className = 'recommend-card';
 
@@ -72,30 +65,27 @@ renderRecommendations: function(topCombos, targetKey) {
     rankBadge.textContent = 'RANK ' + (rank + 1);
 
     var title = document.createElement('h3');
-    title.textContent = '[' + c.blade.code + '] ' + c.blade.name + ' ' + c.ratchet.name + ' ' + c.bit.name.split(' ')[0];
+    title.textContent = '[' + c.blade.code + ']' + c.blade.name + ' ' + c.ratchet.name + ' ' + c.bit.name.split(' ')[0];
 
     var detail = document.createElement('div');
     detail.className = 'combo-detail';
-    detail.innerHTML = 'B: [' + c.blade.code + '] ' + c.blade.name + '<br>R: ' + c.ratchet.name + '<br>Bit: ' + c.bit.name;
+    detail.innerHTML = 'B: [' + c.blade.code + ']' + c.blade.name + '<br>R: ' + c.ratchet.name + '<br>Bit: ' + c.bit.name;
 
     var scoreDiv = document.createElement('div');
     scoreDiv.className = 'score-display';
-    scoreDiv.innerHTML = '<span style="color:var(--text-muted);">' + labels[targetKey] + ':</span><span style="color:var(--primary); font-weight:bold;">' + scoreText + '</span>';
+    scoreDiv.innerHTML = '' + labels[targetKey] + ': ' + scoreText + '';
 
     var applyBtn = document.createElement('button');
     applyBtn.type = 'button';
     applyBtn.className = 'apply-btn';
     applyBtn.textContent = 'シミュレーターにセット';
-    applyBtn.onclick = function() {
-      app.applyCombo(c.bIdx, c.rIdx, c.btIdx);
-    };
+    applyBtn.onclick = function() { app.applyCombo(c.bldx, c.rldx, c.btIdx); };
 
     card.appendChild(rankBadge);
     card.appendChild(title);
     card.appendChild(detail);
     card.appendChild(scoreDiv);
     card.appendChild(applyBtn);
-
     grid.appendChild(card);
   });
 }
