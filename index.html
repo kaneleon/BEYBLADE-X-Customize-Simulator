@@ -796,38 +796,42 @@
     return '<svg class="svg-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">' + pathData + '</svg>';
   }
 
-  // PNG/JPG/JPEG/WEBP 対応の画像要素生成
+  // 多重拡張子・命名パターン対応の画像要素生成
   function renderPartDisplay(category, item) {
     if(!item) return '';
     
-    var fileNamePrimary = '';
-    var fileNameSecondary = '';
+    var cleanCode = (item.code || '').replace('-', '').toLowerCase(); // 例: bx01
+    var codeUpper = (item.code || '').toUpperCase();                  // 例: BX-01
+    var cleanName = item.name.split(' ')[0];                           // 例: F (Bit用)
 
+    var baseNames = [];
     if (category === 'blade') {
-      var cleanCode = (item.code || '').replace('-', '').toLowerCase();
-      fileNamePrimary = cleanCode + item.name;
-      fileNameSecondary = item.code;
+      baseNames = [
+        cleanCode,                     // bx01 (型番のみ小文字)
+        codeUpper,                     // BX-01 (型番のみ大文字)
+        cleanCode + item.name          // bx01ドランソード (フルネーム)
+      ];
     } else if (category === 'ratchet') {
-      fileNamePrimary = item.name;
-      fileNameSecondary = item.name.replace('-', '');
+      baseNames = [
+        item.name,                     // 3-60
+        item.name.replace('-', '')     // 360
+      ];
     } else if (category === 'bit') {
-      var cleanBitName = item.name.split(' ')[0];
-      fileNamePrimary = cleanBitName;
-      fileNameSecondary = cleanBitName.toLowerCase();
+      baseNames = [
+        cleanName,                     // F
+        cleanName.toLowerCase()        // f
+      ];
     }
 
     var exts = ['.png', '.jpg', '.jpeg', '.webp'];
     var candidates = [];
 
-    // 優先パスの拡張子候補
-    for (var i = 0; i < exts.length; i++) {
-      candidates.push('images/' + fileNamePrimary + exts[i]);
-    }
-    // 代替パスの拡張子候補
-    for (var j = 0; j < exts.length; j++) {
-      var altPath = 'images/' + fileNameSecondary + exts[j];
-      if (candidates.indexOf(altPath) === -1) {
-        candidates.push(altPath);
+    for (var i = 0; i < baseNames.length; i++) {
+      for (var j = 0; j < exts.length; j++) {
+        var path = 'images/' + baseNames[i] + exts[j];
+        if (candidates.indexOf(path) === -1) {
+          candidates.push(path);
+        }
       }
     }
 
@@ -913,7 +917,7 @@
   }
 
   window.app = {
-    // 安全な画像エラーハンドラー（SVGフォールバック）
+    // 順次画像探索ハンドラー
     handleImgError: function(img) {
       try {
         var rawCandidates = img.getAttribute('data-candidates') || '';
