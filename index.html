@@ -8,7 +8,6 @@
 <title>BEYBLADE X 物理補正カスタムシミュレーター</title>
 <style>
   :root {
-    /* 蛍光色を完全に排除し、高コントラストで落ち着いた標準カラーへ統一 */
     --primary: #3b82f6;          /* 主アクセント：標準ブルー */
     --secondary: #e11d48;        /* サブアクセント：ローズレッド */
     --bg-color: #0f172a;         /* 背景：ダークスレート */
@@ -18,12 +17,12 @@
     --text-main: #f8fafc;        /* 主文字：クリアホワイト */
     --text-muted: #94a3b8;       /* サブ文字：グレー */
 
-    /* 視認性強化カラー（赤/黄/緑/青をはっきりと区別できる色合い） */
-    --attack-color: #e11d48;     /* 攻撃：深みのある鮮明な赤 */
-    --stamina-color: #eab308;    /* 持久：鮮やかなイエローゴールド（赤と誤認しづらい色） */
-    --defense-color: #10b981;    /* 防御：明るいエメラルドグリーン */
-    --dash-color: #1d4ed8;       /* ダッシュ：濃いディープブルー（緑と誤認しづらい色） */
-    --burst-color: #9333ea;      /* バースト耐性：パープル */
+    /* 視認性強化カラー */
+    --attack-color: #e11d48;     /* 攻撃：赤 */
+    --stamina-color: #eab308;    /* 持久：黄 */
+    --defense-color: #10b981;    /* 防御：緑 */
+    --dash-color: #1d4ed8;       /* ダッシュ：青 */
+    --burst-color: #9333ea;      /* バースト耐性：紫 */
     --height-color: #4f46e5;     /* 全高：インディゴ */
 
     /* タイプ別枠色 */
@@ -441,7 +440,7 @@
 <div class="container">
   <header>
     <h1>BEYBLADE X <span>全パーツ型番完全網羅シミュレーター</span></h1>
-    <p>実データ同期版 / 高視認性ユニバーサルデザイン / 型番00英字キー対応</p>
+    <p>実データ同期版 / 高視認性デザイン / 強化型画像探索エンジン搭載</p>
   </header>
 
   <nav class="nav-tabs" role="tablist">
@@ -602,7 +601,7 @@
     return 'var(--type-other)';
   }
 
-  // ブレードデータ（全83種類・00系パーツに英字キーimgKeyを追加）
+  // ブレードデータ（全83種類）
   var blades = [
     {code:"BX-00", name:"コバルトドレイク", imgKey:"cobalt", series:"BX", type:"アタック", weight:37.2, atk:70, def:35, sta:25, dash:5, brst:6, hgt:3, shape:"jagged"},
     {code:"BX-00", name:"フェニックスフェザー", imgKey:"phoenix", series:"BX", type:"アタック", weight:33.5, atk:50, def:20, sta:30, dash:5, brst:4, hgt:3, shape:"jagged"},
@@ -794,7 +793,7 @@
     return '<svg class="svg-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">' + pathData + '</svg>';
   }
 
-  // ★「型番_英字」形式（例: bx00_cobalt.png）を最優先探索する表示ロジック
+  // ★ 強化版画像探索機能（相対パス `./` や大文字拡張子 `.PNG` も補完）
   function renderPartDisplay(category, item) {
     if(!item) return '';
     
@@ -804,34 +803,30 @@
 
     var baseNames = [];
     if (category === 'blade') {
-      // 1優先: 型番_英字 (例: bx00_cobalt)
       if (item.imgKey) {
-        baseNames.push(cleanCode + '_' + item.imgKey.toLowerCase());
+        baseNames.push(cleanCode + '_' + item.imgKey.toLowerCase());  // 1: bx00_cobalt
       }
-      baseNames.push(cleanCode + '_' + cleanName);                   // 2優先: bx00_コバルトドレイク
-      baseNames.push(cleanCode + item.name);                         // 3優先: bx00コバルトドレイク
-      baseNames.push(cleanCode);                                     // 4優先: bx01 (00以外の通常の型番)
-      baseNames.push(codeUpper);                                     // 5優先: BX-01
+      baseNames.push(cleanCode + '_' + cleanName);                   // 2: bx00_コバルトドレイク
+      baseNames.push(cleanCode + item.name);                         // 3: bx00コバルトドレイク
+      baseNames.push(cleanCode);                                     // 4: bx01
+      baseNames.push(codeUpper);                                     // 5: BX-01
     } else if (category === 'ratchet') {
-      baseNames = [
-        item.name,                                                   // 例: 3-60
-        item.name.replace('-', '')                                   // 例: 360
-      ];
+      baseNames = [item.name, item.name.replace('-', '')];
     } else if (category === 'bit') {
-      baseNames = [
-        cleanName,                                                   // 例: F
-        cleanName.toLowerCase()                                      // 例: f
-      ];
+      baseNames = [cleanName, cleanName.toLowerCase()];
     }
 
-    var exts = ['.png', '.jpg', '.jpeg', '.webp'];
+    var exts = ['.png', '.PNG', '.jpg', '.JPG', '.jpeg', '.webp'];
+    var prefixes = ['images/', './images/'];
     var candidates = [];
 
     for (var i = 0; i < baseNames.length; i++) {
-      for (var j = 0; j < exts.length; j++) {
-        var path = 'images/' + baseNames[i] + exts[j];
-        if (candidates.indexOf(path) === -1) {
-          candidates.push(path);
+      for (var p = 0; p < prefixes.length; p++) {
+        for (var j = 0; j < exts.length; j++) {
+          var path = prefixes[p] + baseNames[i] + exts[j];
+          if (candidates.indexOf(path) === -1) {
+            candidates.push(path);
+          }
         }
       }
     }
@@ -918,16 +913,23 @@
   }
 
   window.app = {
+    // デバッグログ出力機能付き画像エラーハンドラー
     handleImgError: function(img) {
       try {
         var rawCandidates = img.getAttribute('data-candidates') || '';
         var candidates = rawCandidates.split('|');
-        var idx = parseInt(img.getAttribute('data-idx') || '0', 10) + 1;
+        var idx = parseInt(img.getAttribute('data-idx') || '0', 10);
+        
+        // 失敗したパスをブラウザのコンソールに記録
+        console.warn('画像読み込み失敗:', candidates[idx]);
 
-        if (candidates[idx] && candidates[idx] !== '') {
-          img.setAttribute('data-idx', idx);
-          img.src = candidates[idx];
+        var nextIdx = idx + 1;
+
+        if (candidates[nextIdx] && candidates[nextIdx] !== '') {
+          img.setAttribute('data-idx', nextIdx);
+          img.src = candidates[nextIdx];
         } else {
+          console.error('すべての画像候補が読み込めませんでした。SVG表示へ切り替えます:', img.alt);
           img.onerror = null;
           var type = img.getAttribute('data-type') || 'その他';
           if (img.parentElement) {
