@@ -1,91 +1,54 @@
-// グローバル変数にキャッシュ用オブジェクトを追加
-var recCache = {};
+function renderPartDisplay(category, item) {
+  if(!item) return '';
+  
+  var rawCode = item.code || '';
+  var codeLower = rawCode.toLowerCase();                  // bx-01
+  var codeUpper = rawCode.toUpperCase();                  // BX-01
+  var codeNoHyphenLower = codeLower.replace(/-/g, '');    // bx01
+  var codeNoHyphenUpper = codeUpper.replace(/-/g, '');    // BX01
 
-function generateRecommendations(targetKey) {
-  try {
-    var btns = document.querySelectorAll('#tab-recommend .filter-btn');
-    btns.forEach(function(b) { b.classList.remove('active'); });
-    var activeBtn = document.getElementById('rec-' + targetKey);
-    if(activeBtn) activeBtn.classList.add('active');
+  var nameFull = item.name;                               // 例: ドランソード
+  var nameFirstWord = item.name.split(' ')[0];            // 例: F (Bit用)
 
-    // キャッシュが存在する場合は計算をスキップして描画のみ行う
-    if (recCache[targetKey]) {
-      renderRecommendations(recCache[targetKey], targetKey);
-      return;
-    }
+  var baseNames = [];
 
-    var combos = [];
-    for (var i = 0; i < blades.length; i++) {
-      var bd = blades[i];
-      for (var j = 0; j < ratchets.length; j++) {
-        var rt = ratchets[j];
-        for (var k = 0; k < bits.length; k++) {
-          var bt = bits[k];
-          var pStats = calculatePhysicsStats(bd, rt, bt);
-          var score = targetKey === 'weight' ? Number(pStats.totalWeight) : pStats[targetKey];
-          combos.push({ bldx: i, rldx: j, btIdx: k, blade: bd, ratchet: rt, bit: bt, score: score, weight: Number(pStats.totalWeight) });
-        }
-      }
-    }
-    combos.sort(function(a, b) { return (b.score - a.score) || (b.weight - a.weight); });
-
-    var topCombos = [];
-    var usedBlades = {};
-    for (var c = 0; c < combos.length; c++) {
-      var item = combos[c];
-      if(!usedBlades[item.blade.name]) {
-        topCombos.push(item);
-        usedBlades[item.blade.name] = true;
-      }
-      if(topCombos.length >= 6) break;
-    }
-
-    // 計算結果をキャッシュに保存
-    recCache[targetKey] = topCombos;
-    renderRecommendations(topCombos, targetKey);
-  } catch(err) {
-    console.error("Recommend error:", err);
+  if (category === 'blade') {
+    baseNames = [
+      codeNoHyphenLower,                   // bx01
+      codeNoHyphenUpper,                   // BX01
+      codeLower,                           // bx-01
+      codeUpper,                           // BX-01
+      codeNoHyphenLower + nameFull,        // bx01ドランソード
+      codeNoHyphenUpper + nameFull,        // BX01ドランソード
+      nameFull                             // ドランソード
+    ];
+  } else if (category === 'ratchet') {
+    baseNames = [
+      nameFull,                            // 3-60
+      nameFull.replace(/-/g, '')           // 360
+    ];
+  } else if (category === 'bit') {
+    baseNames = [
+      nameFirstWord,                       // F
+      nameFirstWord.toLowerCase(),         // f
+      nameFirstWord.toUpperCase()          // F
+    ];
   }
-}
 
-// 描画ロジックの分離関数
-function renderRecommendations(topCombos, targetKey) {
-  var labels = { atk: '攻撃力', def: '防御力', sta: '持久力', dash: 'ダッシュ力', brst: 'バースト耐性', weight: '総重量' };
-  var grid = document.getElementById('recommendGrid');
-  if(!grid) return;
-  grid.innerHTML = '';
+  // 小文字・大文字拡張子の両方を網羅
+  var exts = ['.png', '.PNG', '.jpg', '.JPG', '.jpeg', '.JPEG', '.webp', '.WEBP'];
+  var candidates = [];
 
-  topCombos.forEach(function(c, rank) {
-    var scoreText = targetKey === 'weight' ? c.weight.toFixed(2) + ' g' : c.score.toFixed(1) + ' pt';
-    var card = document.createElement('div');
-    card.className = 'recommend-card';
+  for (var i = 0; i < baseNames.length; i++) {
+    for (var j = 0; j < exts.length; j++) {
+      var path = 'images/' + encodeURIComponent(baseNames[i]) + exts[j];
+      if (candidates.indexOf(path) === -1) {
+        candidates.push(path);
+      }
+    }
+  }
 
-    var rankBadge = document.createElement('span');
-    rankBadge.className = 'rank-badge';
-    rankBadge.textContent = 'RANK ' + (rank + 1);
+  var candidatesStr = candidates.join('|');
 
-    var title = document.createElement('h3');
-    title.textContent = '[' + c.blade.code + ']' + c.blade.name + ' ' + c.ratchet.name + ' ' + c.bit.name.split(' ')[0];
-
-    var detail = document.createElement('div');
-    detail.className = 'combo-detail';
-    detail.innerHTML = 'B: [' + c.blade.code + ']' + c.blade.name + '<br>R: ' + c.ratchet.name + '<br>Bit: ' + c.bit.name;
-
-    var scoreDiv = document.createElement('div');
-    scoreDiv.className = 'score-display';
-    scoreDiv.innerHTML = '' + labels[targetKey] + ': ' + scoreText + '';
-
-    var applyBtn = document.createElement('button');
-    applyBtn.type = 'button';
-    applyBtn.className = 'apply-btn';
-    applyBtn.textContent = 'シミュレーターにセット';
-    applyBtn.onclick = function() { app.applyCombo(c.bldx, c.rldx, c.btIdx); };
-
-    card.appendChild(rankBadge);
-    card.appendChild(title);
-    card.appendChild(detail);
-    card.appendChild(scoreDiv);
-    card.appendChild(applyBtn);
-    grid.appendChild(card);
-  });
+  return '<img src="' + candidates[0] + '" alt="' + item.name + '" data-candidates="' + candidatesStr + '" data-idx="0" data-type="' + item.type + '" onerror="app.handleImgError(this)">';
 }
