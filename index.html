@@ -9,7 +9,7 @@
 <style>
   :root {
     --primary: #3b82f6;          /* 主アクセント：標準ブルー */
-    --secondary: #e11d48;        /* サブアクセント：ローズレッド */
+    --secondary: #f43f5e;        /* サブアクセント：ローズレッド */
     --bg-color: #0f172a;         /* 背景：ダークスレート */
     --card-bg: #1e293b;          /* カード背景 */
     --card-inner: #0f172a;       /* カード内背景 */
@@ -17,20 +17,20 @@
     --text-main: #f8fafc;        /* 主文字：クリアホワイト */
     --text-muted: #94a3b8;       /* サブ文字：グレー */
 
-    /* 視認性強化カラー */
-    --attack-color: #e11d48;     /* 攻撃：赤 */
-    --stamina-color: #eab308;    /* 持久：黄 */
-    --defense-color: #10b981;    /* 防御：緑 */
-    --dash-color: #1d4ed8;       /* ダッシュ：青 */
-    --burst-color: #9333ea;      /* バースト耐性：紫 */
-    --height-color: #4f46e5;     /* 全高：インディゴ */
+    /* 6項目の識別性を追求した高明度・高コントラストカラー */
+    --attack-color: #f43f5e;     /* 攻撃：ローズレッド */
+    --defense-color: #10b981;    /* 防御：エメラルドグリーン */
+    --stamina-color: #fbbf24;    /* 持久：ブライトイエロー */
+    --dash-color: #3b82f6;       /* ダッシュ：コバルトブルー */
+    --burst-color: #c084fc;      /* バースト耐性：ライラックパープル */
+    --height-color: #06b6d4;     /* 全高：スカイシアン */
 
     /* タイプ別枠色 */
-    --type-attack: #e11d48;     /* アタック：赤 */
-    --type-stamina: #eab308;    /* スタミナ：黄 */
+    --type-attack: #f43f5e;     /* アタック：赤 */
+    --type-stamina: #fbbf24;    /* スタミナ：黄 */
     --type-defense: #10b981;    /* ディフェンス：緑 */
     --type-balance: #3b82f6;    /* バランス：青 */
-    --type-other: #9333ea;      /* その他：紫 */
+    --type-other: #c084fc;      /* その他：紫 */
     
     --sab: env(safe-area-inset-bottom, 0px);
     --sat: env(safe-area-inset-top, 0px);
@@ -440,7 +440,7 @@
 <div class="container">
   <header>
     <h1>BEYBLADE X <span>全パーツ型番完全網羅シミュレーター</span></h1>
-    <p>実データ同期版 / 高視認性デザイン / 高速画像最適化版</p>
+    <p>実データ同期版 / 視認性重視カラー / ピンポイント画像読み込み仕様</p>
   </header>
 
   <nav class="nav-tabs" role="tablist">
@@ -601,15 +601,15 @@
     return 'var(--type-other)';
   }
 
-  // ブレードデータ（全83種類）
+  // ブレードデータ（全83種類・00番パーツに指定のimgKeyを配置）
   var blades = [
-    {code:"BX-00", name:"コバルトドレイク", imgKey:"cobalt", series:"BX", type:"アタック", weight:37.2, atk:70, def:35, sta:25, dash:5, brst:6, hgt:3, shape:"jagged"},
-    {code:"BX-00", name:"フェニックスフェザー", imgKey:"phoenix", series:"BX", type:"アタック", weight:33.5, atk:50, def:20, sta:30, dash:5, brst:4, hgt:3, shape:"jagged"},
-    {code:"BX-00", name:"シノビナイフ", imgKey:"shinobi", series:"BX", type:"ディフェンス", weight:31.2, atk:28, def:55, sta:32, dash:1, brst:3, hgt:3, shape:"round"},
-    {code:"BX-00", name:"マンモスタスク", imgKey:"mammoth", series:"BX", type:"バランス", weight:32.5, atk:38, def:40, sta:37, dash:3, brst:4, hgt:3, shape:"semi_round"},
-    {code:"BX-00", name:"クロコクランチ", imgKey:"croco", series:"BX", type:"アタック", weight:34.1, atk:65, def:27, sta:23, dash:5, brst:5, hgt:3, shape:"jagged"},
-    {code:"BX-00", name:"サムライスティール", imgKey:"samurai", series:"BX", type:"アタック", weight:31.4, atk:45, def:42, sta:28, dash:5, brst:3, hgt:3, shape:"jagged"},
-    {code:"BX-00", name:"トリケラスパイキー", imgKey:"trike", series:"BX", type:"ディフェンス", weight:30.0, atk:32, def:55, sta:13, dash:1, brst:2, hgt:3, shape:"round"},
+    {code:"BX-00", name:"コバルトドレイク", imgKey:"bx00_cobalt", series:"BX", type:"アタック", weight:37.2, atk:70, def:35, sta:25, dash:5, brst:6, hgt:3, shape:"jagged"},
+    {code:"BX-00", name:"フェニックスフェザー", imgKey:"bx00_phoenix", series:"BX", type:"アタック", weight:33.5, atk:50, def:20, sta:30, dash:5, brst:4, hgt:3, shape:"jagged"},
+    {code:"BX-00", name:"シノビナイフ", imgKey:"bx00_shinobi", series:"BX", type:"ディフェンス", weight:31.2, atk:28, def:55, sta:32, dash:1, brst:3, hgt:3, shape:"round"},
+    {code:"BX-00", name:"マンモスタスク", imgKey:"bx00_mammoth", series:"BX", type:"バランス", weight:32.5, atk:38, def:40, sta:37, dash:3, brst:4, hgt:3, shape:"semi_round"},
+    {code:"BX-00", name:"クロコクランチ", imgKey:"bx00_croco", series:"BX", type:"アタック", weight:34.1, atk:65, def:27, sta:23, dash:5, brst:5, hgt:3, shape:"jagged"},
+    {code:"BX-00", name:"サムライスティール", imgKey:"bx00_samurai", series:"BX", type:"アタック", weight:31.4, atk:45, def:42, sta:28, dash:5, brst:3, hgt:3, shape:"jagged"},
+    {code:"BX-00", name:"トリケラスパイキー", imgKey:"bx00_tricera", series:"BX", type:"ディフェンス", weight:30.0, atk:32, def:55, sta:13, dash:1, brst:2, hgt:3, shape:"round"},
     {code:"BX-01", name:"ドランソード", series:"BX", type:"アタック", weight:34.9, atk:55, def:25, sta:20, dash:5, brst:5, hgt:3, shape:"jagged"},
     {code:"BX-02", name:"ヘルズサイズ", series:"BX", type:"バランス", weight:32.9, atk:30, def:35, sta:35, dash:3, brst:4, hgt:3, shape:"semi_round"},
     {code:"BX-03", name:"ウィザードアロー", series:"BX", type:"スタミナ", weight:31.8, atk:15, def:30, sta:55, dash:1, brst:3, hgt:3, shape:"perfect_round"},
@@ -638,9 +638,9 @@
     {code:"BX-46", name:"ゴートタックル", series:"BX", type:"ディフェンス", weight:31.4, atk:13, def:65, sta:22, dash:1, brst:3, hgt:3, shape:"round"},
     {code:"BX-49", name:"ドランストライク", series:"BX", type:"アタック", weight:41.2, atk:58, def:25, sta:17, dash:5, brst:8, hgt:3, shape:"jagged"},
     {code:"BX-50", name:"ヘブンズリング", series:"BX", type:"ディフェンス", weight:37.3, atk:10, def:60, sta:30, dash:1, brst:6, hgt:3, shape:"round"},
-    {code:"UX-00", name:"エアロペガサス", imgKey:"pegasus", series:"UX", type:"アタック", weight:38.7, atk:70, def:30, sta:35, dash:5, brst:7, hgt:3, shape:"jagged"},
-    {code:"UX-00", name:"オロチクラスタ", imgKey:"orochi", series:"UX", type:"アタック", weight:36.1, atk:65, def:15, sta:20, dash:5, brst:6, hgt:3, shape:"jagged"},
-    {code:"UX-00", name:"ワイバーンホバー", imgKey:"wyvern", series:"UX", type:"ディフェンス", weight:34.9, atk:13, def:60, sta:27, dash:1, brst:5, hgt:3, shape:"round"},
+    {code:"UX-00", name:"エアロペガサス", imgKey:"ux00_aero", series:"UX", type:"アタック", weight:38.7, atk:70, def:30, sta:35, dash:5, brst:7, hgt:3, shape:"jagged"},
+    {code:"UX-00", name:"オロチクラスタ", imgKey:"ux00_orochi", series:"UX", type:"アタック", weight:36.1, atk:65, def:15, sta:20, dash:5, brst:6, hgt:3, shape:"jagged"},
+    {code:"UX-00", name:"ワイバーンホバー", imgKey:"ux00_wyvern", series:"UX", type:"ディフェンス", weight:34.9, atk:13, def:60, sta:27, dash:1, brst:5, hgt:3, shape:"round"},
     {code:"UX-01", name:"ドランバスター", series:"UX", type:"アタック", weight:36.6, atk:70, def:20, sta:10, dash:5, brst:6, hgt:3, shape:"jagged"},
     {code:"UX-02", name:"ヘルズハンマー", series:"UX", type:"バランス", weight:33.3, atk:50, def:25, sta:25, dash:3, brst:4, hgt:3, shape:"semi_round"},
     {code:"UX-03", name:"ウィザードロッド", series:"UX", type:"スタミナ", weight:35.1, atk:15, def:25, sta:60, dash:1, brst:5, hgt:3, shape:"perfect_round"},
@@ -664,7 +664,7 @@
     {code:"UX-20", name:"グローリーワルキューレ", series:"UX", type:"アタック", weight:43.5, atk:85, def:35, sta:25, dash:5, brst:9, hgt:3, shape:"jagged"},
     {code:"UX-21", name:"ヘルズネザー (ノーマル)", series:"UX", type:"バランス", weight:42.9, atk:50, def:50, sta:30, dash:3, brst:9, hgt:3, shape:"semi_round"},
     {code:"UX-21", name:"ヘルズネザー (ロー)", series:"UX", type:"アタック", weight:42.9, atk:70, def:45, sta:15, dash:5, brst:9, hgt:3, shape:"jagged"},
-    {code:"CX-00", name:"ワルキューレボルト", imgKey:"valkyrie", series:"CX", type:"アタック", weight:38.0, atk:69, def:29, sta:27, dash:5, brst:7, hgt:3, shape:"jagged"},
+    {code:"CX-00", name:"ワルキューレボルト", imgKey:"cx00_valkyrie", series:"CX", type:"アタック", weight:38.0, atk:69, def:29, sta:27, dash:5, brst:7, hgt:3, shape:"jagged"},
     {code:"CX-01", name:"ドランブレイブ", series:"CX", type:"アタック", weight:37.6, atk:60, def:20, sta:20, dash:5, brst:6, hgt:3, shape:"jagged"},
     {code:"CX-02", name:"ウィザードアーク", series:"CX", type:"スタミナ", weight:35.6, atk:20, def:20, sta:60, dash:1, brst:5, hgt:3, shape:"perfect_round"},
     {code:"CX-03", name:"ペルセウスダーク", series:"CX", type:"ディフェンス", weight:37.0, atk:20, def:60, sta:20, dash:1, brst:6, hgt:3, shape:"round"},
@@ -793,44 +793,34 @@
     return '<svg class="svg-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">' + pathData + '</svg>';
   }
 
-  // ★ 爆速・軽量化した画像探索機能
+  // ピンポイント探索機能（00パーツ直指定＆通常パーツ型番直指定）
   function renderPartDisplay(category, item) {
     if(!item) return '';
     
-    var cleanCode = (item.code || '').replace('-', '').toLowerCase(); // 例: bx00, bx01
-    var codeUpper = (item.code || '').toUpperCase();                  // 例: BX-00, BX-01
-    var cleanName = item.name.split(' ')[0];                           // 例: ドランソード
+    var cleanCode = (item.code || '').replace('-', '').toLowerCase(); // bx00, bx01
+    var cleanName = item.name.split(' ')[0];                           // ドランソード
 
-    var baseNames = [];
+    var baseName = '';
     if (category === 'blade') {
-      // 1優先: imgKeyがある場合（00パーツ用 例: bx00_cobalt）
+      // 00番パーツに指定imgKeyがある場合はそれを最優先、通常パーツは型番（bx01など）を直指定
       if (item.imgKey) {
-        baseNames.push(cleanCode + '_' + item.imgKey.toLowerCase());
+        baseName = item.imgKey;
+      } else {
+        baseName = cleanCode;
       }
-      // 2優先: シンプルな型番（例: bx01, bx02, ux01）★ここを最優先にすることで一発ヒット！
-      baseNames.push(cleanCode);
-      baseNames.push(codeUpper);                                     // 3優先: BX-01
-      baseNames.push(cleanCode + '_' + cleanName);                   // 4優先: bx01_ドランソード（旧互換）
     } else if (category === 'ratchet') {
-      baseNames = [item.name, item.name.replace('-', '')];
+      baseName = item.name;
     } else if (category === 'bit') {
-      baseNames = [cleanName, cleanName.toLowerCase()];
+      baseName = cleanName;
     }
 
-    var exts = ['.jpg', '.png', '.webp', '.jpeg', '.JPG', '.PNG'];
-    var prefixes = ['images/', './images/'];
-    var candidates = [];
-
-    for (var i = 0; i < baseNames.length; i++) {
-      for (var p = 0; p < prefixes.length; p++) {
-        for (var j = 0; j < exts.length; j++) {
-          var path = prefixes[p] + baseNames[i] + exts[j];
-          if (candidates.indexOf(path) === -1) {
-            candidates.push(path);
-          }
-        }
-      }
-    }
+    // .png と .jpg の2パターンのみを迅速試行してエラー負荷を劇的に軽減
+    var candidates = [
+      'images/' + baseName + '.png',
+      'images/' + baseName + '.jpg',
+      './images/' + baseName + '.png',
+      './images/' + baseName + '.jpg'
+    ];
 
     var candidatesStr = candidates.join('|');
 
@@ -1095,7 +1085,6 @@
           card.appendChild(rankBadge);
           card.appendChild(title);
           card.appendChild(detail);
-          card.appendChild(scoreDiv);
           card.appendChild(scoreDiv);
           card.appendChild(applyBtn);
 
