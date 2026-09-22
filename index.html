@@ -666,7 +666,7 @@
     customImages = {};
   }
 
-  // ブレードデータ（全83種類・最新データ反映）
+  // ブレードデータ（全83種類）
   var blades = [
     {code:"BX-00", name:"コバルトドレイク", series:"BX", type:"アタック", weight:37.2, atk:70, def:35, sta:25, dash:5, brst:6, hgt:3, shape:"jagged"},
     {code:"BX-00", name:"フェニックスフェザー", series:"BX", type:"アタック", weight:33.5, atk:50, def:20, sta:30, dash:5, brst:4, hgt:3, shape:"jagged"},
@@ -753,7 +753,7 @@
     {code:"CX-19", name:"クロコトレッド", series:"CX", type:"ディフェンス", weight:38.2, atk:15, def:67, sta:18, dash:1, brst:7, hgt:3, shape:"round"}
   ];
 
-  // ラチェットデータ（全22種類・最新データ反映）
+  // ラチェットデータ（全22種類）
   var ratchets = [
     {code:"R", name:"0-60", series:"全般", type:"ラチェット", weight:6.8, atk:3, def:14, sta:13, dash:0, brst:8, hgt:4, bladesCount:0, heightVal:60},
     {code:"R", name:"0-70", series:"全般", type:"ラチェット", weight:7.0, atk:3, def:13, sta:14, dash:0, brst:6, hgt:6, bladesCount:0, heightVal:70},
@@ -779,7 +779,7 @@
     {code:"R", name:"M-85", series:"全般", type:"ラチェット", weight:10.5, atk:15, def:15, sta:5, dash:0, brst:3, hgt:9, bladesCount:0, heightVal:85}
   ];
 
-  // ビットデータ（全52種類・最新データ反映）
+  // ビットデータ（全52種類）
   var bits = [
     {code:"Bit", name:"F (Flat)", series:"全般", type:"アタック", weight:2.3, atk:40, def:15, sta:10, dash:35, brst:80, hgt:3},
     {code:"Bit", name:"T (Taper)", series:"全般", type:"バランス", weight:2.3, atk:35, def:20, sta:20, dash:25, brst:80, hgt:3},
@@ -858,6 +858,7 @@
     return '<svg class="svg-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">' + pathData + '</svg>';
   }
 
+  // PNG/JPG/JPEG/WEBP 対応の画像要素生成
   function renderPartDisplay(category, item) {
     if(!item) return '';
     var key = category + '_' + item.name;
@@ -882,11 +883,24 @@
       fileNameSecondary = cleanBitName.toLowerCase();
     }
 
-    var primaryPath = 'images/' + fileNamePrimary + '.jpg';
-    var secondaryPath = 'images/' + fileNameSecondary + '.jpg';
-    var svg = createSVGIcon(item.type);
-    
-    return '<img src="' + primaryPath + '" alt="' + item.name + '" onerror="if(this.src.indexOf(\'' + encodeURIComponent(secondaryPath) + '\')===-1 && !this.getAttribute(\'data-tried\')){this.setAttribute(\'data-tried\',\'1\'); this.src=\'' + secondaryPath + '\';} else {this.onerror=null; this.parentElement.innerHTML=\'' + svg.replace(/'/g, "\\'") + '\';}">';
+    var exts = ['.jpg', '.png', '.jpeg', '.webp'];
+    var candidates = [];
+
+    // 優先パスの拡張子候補
+    for (var i = 0; i < exts.length; i++) {
+      candidates.push('images/' + fileNamePrimary + exts[i]);
+    }
+    // 代替パスの拡張子候補
+    for (var j = 0; j < exts.length; j++) {
+      var altPath = 'images/' + fileNameSecondary + exts[j];
+      if (candidates.indexOf(altPath) === -1) {
+        candidates.push(altPath);
+      }
+    }
+
+    var candidatesJson = JSON.stringify(candidates).replace(/"/g, '&quot;');
+
+    return '<img src="' + candidates[0] + '" alt="' + item.name + '" data-candidates="' + candidatesJson + '" data-index="0" data-type="' + item.type + '" onerror="app.nextImg(this)">';
   }
 
   function calculatePhysicsStats(bd, rt, bt) {
@@ -966,6 +980,30 @@
   }
 
   window.app = {
+    // 順次画像試行・SVGフォールバック処理
+    nextImg: function(img) {
+      try {
+        var candidates = JSON.parse(img.getAttribute('data-candidates') || '[]');
+        var idx = parseInt(img.getAttribute('data-index') || '0', 10) + 1;
+        if (idx < candidates.length) {
+          img.setAttribute('data-index', idx);
+          img.src = candidates[idx];
+        } else {
+          img.onerror = null;
+          var type = img.getAttribute('data-type');
+          if (img.parentElement) {
+            img.parentElement.innerHTML = createSVGIcon(type);
+          }
+        }
+      } catch(e) {
+        img.onerror = null;
+        var type = img.getAttribute('data-type');
+        if (img.parentElement) {
+          img.parentElement.innerHTML = createSVGIcon(type);
+        }
+      }
+    },
+
     switchTab: function(tabId) {
       try {
         var contents = document.querySelectorAll('.tab-content');
@@ -1105,7 +1143,6 @@
         bar.style.width = pct + '%';
       };
 
-      // 実数値に合わせたバー上限の設定
       setBar('Atk', stats.atk, 150);
       setBar('Def', stats.def, 150);
       setBar('Sta', stats.sta, 150);
@@ -1132,7 +1169,6 @@
         if(activeBtn) activeBtn.classList.add('active');
 
         var combos = [];
-        // 全パーツ組み合わせの完全探索（全94,952通り）
         for (var i = 0; i < blades.length; i++) {
           for (var j = 0; j < ratchets.length; j++) {
             for (var k = 0; k < bits.length; k++) {
