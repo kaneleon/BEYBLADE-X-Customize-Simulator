@@ -5,33 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>BEYBLADE X 物理補正カスタムシミュレーター (高視認性版)</title>
+<title>BEYBLADE X 物理補正カスタムシミュレーター</title>
 <style>
   :root {
-    /* 蛍光色を廃止し、目に優しい高コントラスト配色へ変更 */
-    --primary: #3b82f6;       /* メインアクセント：標準ブルー */
-    --secondary: #e11d48;     /* サブアクセント：ローズレッド */
-    --bg-color: #0f172a;      /* 背景：落ち着いたダークスレート */
-    --card-bg: #1e293b;       /* カード背景：やや明るいスレート */
-    --card-inner: #0f172a;    /* カード内背景 */
-    --border-color: #334155;  /* 枠線色 */
-    --text-main: #f8fafc;     /* メイン文字：見やすいクリアホワイト */
-    --text-muted: #94a3b8;    /* サブ文字：グレー */
+    /* 蛍光色を完全に排除し、高コントラストで落ち着いた標準カラーへ統一 */
+    --primary: #3b82f6;          /* 主アクセント：標準ブルー */
+    --secondary: #e11d48;        /* サブアクセント：ローズレッド */
+    --bg-color: #0f172a;         /* 背景：ダークスレート */
+    --card-bg: #1e293b;          /* カード背景 */
+    --card-inner: #0f172a;       /* カード内背景 */
+    --border-color: #334155;     /* 枠線色 */
+    --text-main: #f8fafc;        /* 主文字：クリアホワイト */
+    --text-muted: #94a3b8;       /* サブ文字：グレー */
 
-    /* ステータスバー用カラー（高視認性カラー） */
-    --attack-color: #ef4444;   /* 攻撃：レッド */
-    --defense-color: #10b981;  /* 防御：エメラルドグリーン */
-    --stamina-color: #f59e0b;  /* 持久：アンバーイエロー */
-    --dash-color: #0284c7;     /* ダッシュ：シアンブルー */
-    --burst-color: #8b5cf6;    /* バースト耐性：パープル */
-    --height-color: #6366f1;   /* 全高：インディゴ */
+    /* 視認性強化カラー（赤/黄/緑/青をはっきりと区別できる色合い） */
+    --attack-color: #e11d48;     /* 攻撃：深みのある鮮明な赤 */
+    --stamina-color: #eab308;    /* 持久：鮮やかなイエローゴールド（赤と誤認しづらい色） */
+    --defense-color: #10b981;    /* 防御：明るいエメラルドグリーン */
+    --dash-color: #1d4ed8;       /* ダッシュ：濃いディープブルー（緑と誤認しづらい色） */
+    --burst-color: #9333ea;      /* バースト耐性：パープル */
+    --height-color: #4f46e5;     /* 全高：インディゴ */
 
     /* タイプ別枠色 */
-    --type-attack: #2563eb;    /* アタック：青 */
-    --type-stamina: #d97706;   /* スタミナ：橙黄 */
-    --type-defense: #059669;   /* ディフェンス：緑 */
-    --type-balance: #dc2626;   /* バランス：赤 */
-    --type-other: #7c3aed;     /* その他：紫 */
+    --type-attack: #e11d48;     /* アタック：赤 */
+    --type-stamina: #eab308;    /* スタミナ：黄 */
+    --type-defense: #10b981;    /* ディフェンス：緑 */
+    --type-balance: #3b82f6;    /* バランス：青 */
+    --type-other: #9333ea;      /* その他：紫 */
     
     --sab: env(safe-area-inset-bottom, 0px);
     --sat: env(safe-area-inset-top, 0px);
@@ -69,6 +69,7 @@
     font-size: 1.2rem;
     font-weight: 800;
     letter-spacing: 0.05em;
+    color: var(--text-main);
   }
 
   header h1 span {
@@ -440,7 +441,7 @@
 <div class="container">
   <header>
     <h1>BEYBLADE X <span>全パーツ型番完全網羅シミュレーター</span></h1>
-    <p>実データ同期版 / 高視認性デザイン / 型番00個別識別対応</p>
+    <p>実データ同期版 / 高視認性ユニバーサルデザイン / 型番00英字キー対応</p>
   </header>
 
   <nav class="nav-tabs" role="tablist">
@@ -601,15 +602,15 @@
     return 'var(--type-other)';
   }
 
-  // ブレードデータ（全83種類）
+  // ブレードデータ（全83種類・00系パーツに英字キーimgKeyを追加）
   var blades = [
-    {code:"BX-00", name:"コバルトドレイク", series:"BX", type:"アタック", weight:37.2, atk:70, def:35, sta:25, dash:5, brst:6, hgt:3, shape:"jagged"},
-    {code:"BX-00", name:"フェニックスフェザー", series:"BX", type:"アタック", weight:33.5, atk:50, def:20, sta:30, dash:5, brst:4, hgt:3, shape:"jagged"},
-    {code:"BX-00", name:"シノビナイフ", series:"BX", type:"ディフェンス", weight:31.2, atk:28, def:55, sta:32, dash:1, brst:3, hgt:3, shape:"round"},
-    {code:"BX-00", name:"マンモスタスク", series:"BX", type:"バランス", weight:32.5, atk:38, def:40, sta:37, dash:3, brst:4, hgt:3, shape:"semi_round"},
-    {code:"BX-00", name:"クロコクランチ", series:"BX", type:"アタック", weight:34.1, atk:65, def:27, sta:23, dash:5, brst:5, hgt:3, shape:"jagged"},
-    {code:"BX-00", name:"サムライスティール", series:"BX", type:"アタック", weight:31.4, atk:45, def:42, sta:28, dash:5, brst:3, hgt:3, shape:"jagged"},
-    {code:"BX-00", name:"トリケラスパイキー", series:"BX", type:"ディフェンス", weight:30.0, atk:32, def:55, sta:13, dash:1, brst:2, hgt:3, shape:"round"},
+    {code:"BX-00", name:"コバルトドレイク", imgKey:"cobalt", series:"BX", type:"アタック", weight:37.2, atk:70, def:35, sta:25, dash:5, brst:6, hgt:3, shape:"jagged"},
+    {code:"BX-00", name:"フェニックスフェザー", imgKey:"phoenix", series:"BX", type:"アタック", weight:33.5, atk:50, def:20, sta:30, dash:5, brst:4, hgt:3, shape:"jagged"},
+    {code:"BX-00", name:"シノビナイフ", imgKey:"shinobi", series:"BX", type:"ディフェンス", weight:31.2, atk:28, def:55, sta:32, dash:1, brst:3, hgt:3, shape:"round"},
+    {code:"BX-00", name:"マンモスタスク", imgKey:"mammoth", series:"BX", type:"バランス", weight:32.5, atk:38, def:40, sta:37, dash:3, brst:4, hgt:3, shape:"semi_round"},
+    {code:"BX-00", name:"クロコクランチ", imgKey:"croco", series:"BX", type:"アタック", weight:34.1, atk:65, def:27, sta:23, dash:5, brst:5, hgt:3, shape:"jagged"},
+    {code:"BX-00", name:"サムライスティール", imgKey:"samurai", series:"BX", type:"アタック", weight:31.4, atk:45, def:42, sta:28, dash:5, brst:3, hgt:3, shape:"jagged"},
+    {code:"BX-00", name:"トリケラスパイキー", imgKey:"trike", series:"BX", type:"ディフェンス", weight:30.0, atk:32, def:55, sta:13, dash:1, brst:2, hgt:3, shape:"round"},
     {code:"BX-01", name:"ドランソード", series:"BX", type:"アタック", weight:34.9, atk:55, def:25, sta:20, dash:5, brst:5, hgt:3, shape:"jagged"},
     {code:"BX-02", name:"ヘルズサイズ", series:"BX", type:"バランス", weight:32.9, atk:30, def:35, sta:35, dash:3, brst:4, hgt:3, shape:"semi_round"},
     {code:"BX-03", name:"ウィザードアロー", series:"BX", type:"スタミナ", weight:31.8, atk:15, def:30, sta:55, dash:1, brst:3, hgt:3, shape:"perfect_round"},
@@ -638,9 +639,9 @@
     {code:"BX-46", name:"ゴートタックル", series:"BX", type:"ディフェンス", weight:31.4, atk:13, def:65, sta:22, dash:1, brst:3, hgt:3, shape:"round"},
     {code:"BX-49", name:"ドランストライク", series:"BX", type:"アタック", weight:41.2, atk:58, def:25, sta:17, dash:5, brst:8, hgt:3, shape:"jagged"},
     {code:"BX-50", name:"ヘブンズリング", series:"BX", type:"ディフェンス", weight:37.3, atk:10, def:60, sta:30, dash:1, brst:6, hgt:3, shape:"round"},
-    {code:"UX-00", name:"エアロペガサス", series:"UX", type:"アタック", weight:38.7, atk:70, def:30, sta:35, dash:5, brst:7, hgt:3, shape:"jagged"},
-    {code:"UX-00", name:"オロチクラスタ", series:"UX", type:"アタック", weight:36.1, atk:65, def:15, sta:20, dash:5, brst:6, hgt:3, shape:"jagged"},
-    {code:"UX-00", name:"ワイバーンホバー", series:"UX", type:"ディフェンス", weight:34.9, atk:13, def:60, sta:27, dash:1, brst:5, hgt:3, shape:"round"},
+    {code:"UX-00", name:"エアロペガサス", imgKey:"pegasus", series:"UX", type:"アタック", weight:38.7, atk:70, def:30, sta:35, dash:5, brst:7, hgt:3, shape:"jagged"},
+    {code:"UX-00", name:"オロチクラスタ", imgKey:"orochi", series:"UX", type:"アタック", weight:36.1, atk:65, def:15, sta:20, dash:5, brst:6, hgt:3, shape:"jagged"},
+    {code:"UX-00", name:"ワイバーンホバー", imgKey:"wyvern", series:"UX", type:"ディフェンス", weight:34.9, atk:13, def:60, sta:27, dash:1, brst:5, hgt:3, shape:"round"},
     {code:"UX-01", name:"ドランバスター", series:"UX", type:"アタック", weight:36.6, atk:70, def:20, sta:10, dash:5, brst:6, hgt:3, shape:"jagged"},
     {code:"UX-02", name:"ヘルズハンマー", series:"UX", type:"バランス", weight:33.3, atk:50, def:25, sta:25, dash:3, brst:4, hgt:3, shape:"semi_round"},
     {code:"UX-03", name:"ウィザードロッド", series:"UX", type:"スタミナ", weight:35.1, atk:15, def:25, sta:60, dash:1, brst:5, hgt:3, shape:"perfect_round"},
@@ -664,7 +665,7 @@
     {code:"UX-20", name:"グローリーワルキューレ", series:"UX", type:"アタック", weight:43.5, atk:85, def:35, sta:25, dash:5, brst:9, hgt:3, shape:"jagged"},
     {code:"UX-21", name:"ヘルズネザー (ノーマル)", series:"UX", type:"バランス", weight:42.9, atk:50, def:50, sta:30, dash:3, brst:9, hgt:3, shape:"semi_round"},
     {code:"UX-21", name:"ヘルズネザー (ロー)", series:"UX", type:"アタック", weight:42.9, atk:70, def:45, sta:15, dash:5, brst:9, hgt:3, shape:"jagged"},
-    {code:"CX-00", name:"ワルキューレボルト", series:"CX", type:"アタック", weight:38.0, atk:69, def:29, sta:27, dash:5, brst:7, hgt:3, shape:"jagged"},
+    {code:"CX-00", name:"ワルキューレボルト", imgKey:"valkyrie", series:"CX", type:"アタック", weight:38.0, atk:69, def:29, sta:27, dash:5, brst:7, hgt:3, shape:"jagged"},
     {code:"CX-01", name:"ドランブレイブ", series:"CX", type:"アタック", weight:37.6, atk:60, def:20, sta:20, dash:5, brst:6, hgt:3, shape:"jagged"},
     {code:"CX-02", name:"ウィザードアーク", series:"CX", type:"スタミナ", weight:35.6, atk:20, def:20, sta:60, dash:1, brst:5, hgt:3, shape:"perfect_round"},
     {code:"CX-03", name:"ペルセウスダーク", series:"CX", type:"ディフェンス", weight:37.0, atk:20, def:60, sta:20, dash:1, brst:6, hgt:3, shape:"round"},
@@ -793,7 +794,7 @@
     return '<svg class="svg-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">' + pathData + '</svg>';
   }
 
-  // ★「00」型番問題に対応した画像探索ロジック
+  // ★「型番_英字」形式（例: bx00_cobalt.png）を最優先探索する表示ロジック
   function renderPartDisplay(category, item) {
     if(!item) return '';
     
@@ -803,21 +804,23 @@
 
     var baseNames = [];
     if (category === 'blade') {
-      baseNames = [
-        cleanCode + '_' + cleanName,       /* 1優先: bx00_コバルトドレイク (00型番用) */
-        cleanCode + item.name,             /* 2優先: bx00コバルトドレイク */
-        cleanCode,                         /* 3優先: bx01 (00以外の通常の型番) */
-        codeUpper                          /* 4優先: BX-01 */
-      ];
+      // 1優先: 型番_英字 (例: bx00_cobalt)
+      if (item.imgKey) {
+        baseNames.push(cleanCode + '_' + item.imgKey.toLowerCase());
+      }
+      baseNames.push(cleanCode + '_' + cleanName);                   // 2優先: bx00_コバルトドレイク
+      baseNames.push(cleanCode + item.name);                         // 3優先: bx00コバルトドレイク
+      baseNames.push(cleanCode);                                     // 4優先: bx01 (00以外の通常の型番)
+      baseNames.push(codeUpper);                                     // 5優先: BX-01
     } else if (category === 'ratchet') {
       baseNames = [
-        item.name,                         /* 例: 3-60 */
-        item.name.replace('-', '')         /* 例: 360 */
+        item.name,                                                   // 例: 3-60
+        item.name.replace('-', '')                                   // 例: 360
       ];
     } else if (category === 'bit') {
       baseNames = [
-        cleanName,                         /* 例: F */
-        cleanName.toLowerCase()            /* 例: f */
+        cleanName,                                                   // 例: F
+        cleanName.toLowerCase()                                      // 例: f
       ];
     }
 
