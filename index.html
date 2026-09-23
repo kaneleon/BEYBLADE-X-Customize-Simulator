@@ -670,7 +670,7 @@
     <!-- ブレード所持管理 -->
     <div class="inventory-section">
       <div class="inventory-header">
-        <h3>ブレード (全83種)</h3>
+        <h3>ブレード (全84種)</h3>
         <div class="inventory-controls">
           <button type="button" class="action-btn-sm" onclick="app.setAllOwned('blades', true)">全選択</button>
           <button type="button" class="action-btn-sm" onclick="app.setAllOwned('blades', false)">全解除</button>
@@ -719,94 +719,95 @@
     return 'var(--type-other)';
   }
 
-  // ブレードデータ（全83種類網羅）
+  // ブレードデータ（全84種・全件imgId設定済み）
   var blades = [
-    {code:"BX-00", name:"コバルトドレイク", imgKey:"bx00_cobalt", series:"BX", type:"アタック", weight:37.2, atk:70, def:35, sta:25, dash:5, brst:6, hgt:3, shape:"jagged"},
-    {code:"BX-00", name:"フェニックスフェザー", imgKey:"bx00_phoenix", series:"BX", type:"アタック", weight:33.5, atk:50, def:20, sta:30, dash:5, brst:4, hgt:3, shape:"jagged"},
-    {code:"BX-00", name:"シノビナイフ", imgKey:"bx00_shinobi", series:"BX", type:"ディフェンス", weight:31.2, atk:28, def:55, sta:32, dash:1, brst:3, hgt:3, shape:"round"},
-    {code:"BX-00", name:"マンモスタスク", imgKey:"bx00_mammoth", series:"BX", type:"バランス", weight:32.5, atk:38, def:40, sta:37, dash:3, brst:4, hgt:3, shape:"semi_round"},
-    {code:"BX-00", name:"クロコクランチ", imgKey:"bx00_croco", series:"BX", type:"アタック", weight:34.1, atk:65, def:27, sta:23, dash:5, brst:5, hgt:3, shape:"jagged"},
-    {code:"BX-00", name:"サムライスティール", imgKey:"bx00_samurai", series:"BX", type:"アタック", weight:31.4, atk:45, def:42, sta:28, dash:5, brst:3, hgt:3, shape:"jagged"},
-    {code:"BX-00", name:"トリケラスパイキー", imgKey:"bx00_tricera", series:"BX", type:"ディフェンス", weight:30.0, atk:32, def:55, sta:13, dash:1, brst:2, hgt:3, shape:"round"},
-    {code:"BX-01", name:"ドランソード", series:"BX", type:"アタック", weight:34.9, atk:55, def:25, sta:20, dash:5, brst:5, hgt:3, shape:"jagged"},
-    {code:"BX-02", name:"ヘルズサイズ", series:"BX", type:"バランス", weight:32.9, atk:30, def:35, sta:35, dash:3, brst:4, hgt:3, shape:"semi_round"},
-    {code:"BX-03", name:"ウィザードアロー", series:"BX", type:"スタミナ", weight:31.8, atk:15, def:30, sta:55, dash:1, brst:3, hgt:3, shape:"perfect_round"},
-    {code:"BX-04", name:"ナイトシールド", series:"BX", type:"ディフェンス", weight:32.5, atk:20, def:55, sta:25, dash:1, brst:4, hgt:3, shape:"round"},
-    {code:"BX-13", name:"ナイトランス", series:"BX", type:"ディフェンス", weight:32.3, atk:25, def:60, sta:15, dash:1, brst:4, hgt:3, shape:"round"},
-    {code:"BX-14", name:"シャークエッジ", series:"BX", type:"アタック", weight:34.5, atk:60, def:25, sta:15, dash:5, brst:5, hgt:3, shape:"jagged"},
-    {code:"BX-15", name:"レオンクロー", series:"BX", type:"バランス", weight:31.6, atk:40, def:40, sta:20, dash:3, brst:3, hgt:3, shape:"semi_round"},
-    {code:"BX-16", name:"ヴァイパーテイル", series:"BX", type:"スタミナ", weight:34.6, atk:30, def:20, sta:50, dash:1, brst:5, hgt:3, shape:"perfect_round"},
-    {code:"BX-19", name:"ライノホーン", series:"BX", type:"ディフェンス", weight:32.8, atk:20, def:50, sta:30, dash:1, brst:4, hgt:3, shape:"round"},
-    {code:"BX-20", name:"ドランダガー", series:"BX", type:"アタック", weight:34.7, atk:50, def:25, sta:25, dash:5, brst:5, hgt:3, shape:"jagged"},
-    {code:"BX-21", name:"ヘルズチェイン", series:"BX", type:"バランス", weight:33.3, atk:35, def:40, sta:25, dash:3, brst:4, hgt:3, shape:"semi_round"},
-    {code:"BX-23", name:"フェニックスウイング", series:"BX", type:"アタック", weight:38.0, atk:65, def:30, sta:20, dash:5, brst:6, hgt:3, shape:"jagged"},
-    {code:"BX-24", name:"ワイバーンゲイル", series:"BX", type:"スタミナ", weight:32.1, atk:10, def:40, sta:50, dash:1, brst:4, hgt:3, shape:"perfect_round"},
-    {code:"BX-26", name:"ユニコーンスティング", series:"BX", type:"バランス", weight:33.3, atk:35, def:35, sta:30, dash:3, brst:4, hgt:3, shape:"semi_round"},
-    {code:"BX-27", name:"スフィンクスカウル", series:"BX", type:"ディフェンス", weight:32.7, atk:35, def:55, sta:10, dash:1, brst:4, hgt:3, shape:"round"},
-    {code:"BX-31", name:"ティラノビート", series:"BX", type:"アタック", weight:36.8, atk:65, def:30, sta:5, dash:5, brst:6, hgt:3, shape:"jagged"},
-    {code:"BX-33", name:"ヴァイスタイガー", series:"BX", type:"アタック", weight:35.0, atk:45, def:30, sta:25, dash:5, brst:5, hgt:3, shape:"jagged"},
-    {code:"BX-34", name:"コバルトドラグーン", series:"BX", type:"アタック", weight:37.9, atk:60, def:15, sta:25, dash:5, brst:6, hgt:3, shape:"jagged"},
-    {code:"BX-35", name:"ブラックシェル", series:"BX", type:"ディフェンス", weight:32.6, atk:10, def:65, sta:25, dash:1, brst:4, hgt:3, shape:"round"},
-    {code:"BX-36", name:"ホエールウェーブ", series:"BX", type:"アタック", weight:38.2, atk:45, def:35, sta:20, dash:5, brst:7, hgt:3, shape:"jagged"},
-    {code:"BX-37", name:"ベアスクラッチ", series:"BX", type:"ディフェンス", weight:29.7, atk:25, def:45, sta:30, dash:1, brst:2, hgt:3, shape:"round"},
-    {code:"BX-38", name:"クリムゾンガルーダ", series:"BX", type:"アタック", weight:35.1, atk:45, def:25, sta:30, dash:5, brst:5, hgt:3, shape:"jagged"},
-    {code:"BX-39", name:"シェルタードレイク", series:"BX", type:"ディフェンス", weight:32.4, atk:25, def:40, sta:35, dash:1, brst:4, hgt:3, shape:"round"},
-    {code:"BX-44", name:"トリケラプレス", series:"BX", type:"ディフェンス", weight:36.4, atk:20, def:65, sta:15, dash:1, brst:6, hgt:3, shape:"round"},
-    {code:"BX-45", name:"サムライカリバー", series:"BX", type:"バランス", weight:36.0, atk:40, def:30, sta:30, dash:3, brst:6, hgt:3, shape:"semi_round"},
-    {code:"BX-46", name:"ゴートタックル", series:"BX", type:"ディフェンス", weight:31.4, atk:13, def:65, sta:22, dash:1, brst:3, hgt:3, shape:"round"},
-    {code:"BX-49", name:"ドランストライク", series:"BX", type:"アタック", weight:41.2, atk:58, def:25, sta:17, dash:5, brst:8, hgt:3, shape:"jagged"},
-    {code:"BX-50", name:"ヘブンズリング", series:"BX", type:"ディフェンス", weight:37.3, atk:10, def:60, sta:30, dash:1, brst:6, hgt:3, shape:"round"},
-    {code:"UX-00", name:"エアロペガサス", imgKey:"ux00_aero", series:"UX", type:"アタック", weight:38.7, atk:70, def:30, sta:35, dash:5, brst:7, hgt:3, shape:"jagged"},
-    {code:"UX-00", name:"オロチクラスタ", imgKey:"ux00_orochi", series:"UX", type:"アタック", weight:36.1, atk:65, def:15, sta:20, dash:5, brst:6, hgt:3, shape:"jagged"},
-    {code:"UX-00", name:"ワイバーンホバー", imgKey:"ux00_wyvern", series:"UX", type:"ディフェンス", weight:34.9, atk:13, def:60, sta:27, dash:1, brst:5, hgt:3, shape:"round"},
-    {code:"UX-01", name:"ドランバスター", series:"UX", type:"アタック", weight:36.6, atk:70, def:20, sta:10, dash:5, brst:6, hgt:3, shape:"jagged"},
-    {code:"UX-02", name:"ヘルズハンマー", series:"UX", type:"バランス", weight:33.3, atk:50, def:25, sta:25, dash:3, brst:4, hgt:3, shape:"semi_round"},
-    {code:"UX-03", name:"ウィザードロッド", series:"UX", type:"スタミナ", weight:35.1, atk:15, def:25, sta:60, dash:1, brst:5, hgt:3, shape:"perfect_round"},
-    {code:"UX-05", name:"シノビシャドウ", series:"UX", type:"ディフェンス", weight:28.0, atk:10, def:70, sta:20, dash:1, brst:2, hgt:3, shape:"round"},
-    {code:"UX-06", name:"レオンクレスト", series:"UX", type:"ディフェンス", weight:34.8, atk:15, def:70, sta:15, dash:1, brst:5, hgt:3, shape:"round"},
-    {code:"UX-07", name:"フェニックスラダー", series:"UX", type:"スタミナ", weight:34.2, atk:15, def:40, sta:60, dash:1, brst:5, hgt:3, shape:"perfect_round"},
-    {code:"UX-08", name:"シルバーウルフ", series:"UX", type:"スタミナ", weight:36.7, atk:15, def:30, sta:65, dash:1, brst:6, hgt:3, shape:"perfect_round"},
-    {code:"UX-09", name:"サムライセイバー", series:"UX", type:"アタック", weight:36.5, atk:65, def:20, sta:25, dash:5, brst:6, hgt:3, shape:"jagged"},
-    {code:"UX-10", name:"プテラスイング", series:"UX", type:"スタミナ", weight:34.4, atk:27, def:23, sta:50, dash:1, brst:5, hgt:3, shape:"perfect_round"},
-    {code:"UX-10", name:"ナイトメイル", series:"UX", type:"ディフェンス", weight:36.6, atk:15, def:70, sta:15, dash:1, brst:6, hgt:3, shape:"round"},
-    {code:"UX-11", name:"インパクトドレイク", series:"UX", type:"アタック", weight:38.9, atk:75, def:25, sta:10, dash:5, brst:7, hgt:3, shape:"jagged"},
-    {code:"UX-12", name:"ゴーストサークル", series:"UX", type:"スタミナ", weight:26.6, atk:5, def:40, sta:55, dash:1, brst:1, hgt:3, shape:"perfect_round"},
-    {code:"UX-13", name:"ゴーレムロック", series:"UX", type:"ディフェンス", weight:34.0, atk:30, def:60, sta:10, dash:1, brst:5, hgt:3, shape:"round"},
-    {code:"UX-14", name:"スコーピオスピア", series:"UX", type:"ディフェンス", weight:39.8, atk:25, def:55, sta:30, dash:1, brst:7, hgt:3, shape:"round"},
-    {code:"UX-15", name:"ティラノロア", series:"UX", type:"アタック", weight:36.0, atk:60, def:28, sta:12, dash:5, brst:6, hgt:3, shape:"jagged"},
-    {code:"UX-15", name:"シャークスケイル", series:"UX", type:"アタック", weight:37.3, atk:70, def:15, sta:15, dash:5, brst:6, hgt:3, shape:"jagged"},
-    {code:"UX-16", name:"クロックミラージュ", series:"UX", type:"スタミナ", weight:37.7, atk:10, def:10, sta:80, dash:1, brst:6, hgt:3, shape:"perfect_round"},
-    {code:"UX-17", name:"メテオドラグーン", series:"UX", type:"アタック", weight:39.0, atk:75, def:15, sta:35, dash:5, brst:7, hgt:3, shape:"jagged"},
-    {code:"UX-18", name:"マミーカース", series:"UX", type:"ディフェンス", weight:37.6, atk:30, def:60, sta:20, dash:1, brst:6, hgt:3, shape:"round"},
-    {code:"UX-19", name:"バレットグリフォン", series:"UX", type:"バランス", weight:60.7, atk:45, def:45, sta:40, dash:3, brst:18, hgt:3, shape:"semi_round"},
-    {code:"UX-20", name:"グローリーワルキューレ", series:"UX", type:"アタック", weight:43.5, atk:85, def:35, sta:25, dash:5, brst:9, hgt:3, shape:"jagged"},
-    {code:"UX-21", name:"ヘルズネザー (ノーマル)", series:"UX", type:"バランス", weight:42.9, atk:50, def:50, sta:30, dash:3, brst:9, hgt:3, shape:"semi_round"},
-    {code:"UX-21", name:"ヘルズネザー (ロー)", series:"UX", type:"アタック", weight:42.9, atk:70, def:45, sta:15, dash:5, brst:9, hgt:3, shape:"jagged"},
-    {code:"CX-00", name:"ワルキューレボルト", imgKey:"cx00_valkyrie", series:"CX", type:"アタック", weight:38.0, atk:69, def:29, sta:27, dash:5, brst:7, hgt:3, shape:"jagged"},
-    {code:"CX-01", name:"ドランブレイブ", series:"CX", type:"アタック", weight:37.6, atk:60, def:20, sta:20, dash:5, brst:6, hgt:3, shape:"jagged"},
-    {code:"CX-02", name:"ウィザードアーク", series:"CX", type:"スタミナ", weight:35.6, atk:20, def:20, sta:60, dash:1, brst:5, hgt:3, shape:"perfect_round"},
-    {code:"CX-03", name:"ペルセウスダーク", series:"CX", type:"ディフェンス", weight:37.0, atk:20, def:60, sta:20, dash:1, brst:6, hgt:3, shape:"round"},
-    {code:"CX-05", name:"ヘルズリーパー (連撃)", series:"CX", type:"バランス", weight:36.5, atk:40, def:20, sta:45, dash:3, brst:6, hgt:3, shape:"semi_round"},
-    {code:"CX-05", name:"ヘルズリーパー (受け流し)", series:"CX", type:"バランス", weight:36.5, atk:35, def:20, sta:45, dash:3, brst:6, hgt:3, shape:"semi_round"},
-    {code:"CX-05", name:"ライノリーパー", series:"CX", type:"バランス", weight:35.8, atk:40, def:30, sta:30, dash:3, brst:5, hgt:3, shape:"semi_round"},
-    {code:"CX-06", name:"フォックスブラッシュ", series:"CX", type:"アタック", weight:36.8, atk:60, def:30, sta:10, dash:5, brst:6, hgt:3, shape:"jagged"},
-    {code:"CX-07", name:"ペガサスブラスト", series:"CX", type:"アタック", weight:39.3, atk:75, def:20, sta:20, dash:5, brst:7, hgt:3, shape:"jagged"},
-    {code:"CX-08", name:"ケルベロスフレイム", series:"CX", type:"スタミナ", weight:37.3, atk:10, def:30, sta:60, dash:1, brst:6, hgt:3, shape:"perfect_round"},
-    {code:"CX-08", name:"ホエールフレイム", series:"CX", type:"スタミナ", weight:36.0, atk:20, def:30, sta:50, dash:1, brst:6, hgt:3, shape:"perfect_round"},
-    {code:"CX-09", name:"ソルエクリプス (アッパー)", series:"CX", type:"アタック", weight:40.0, atk:47, def:33, sta:20, dash:5, brst:8, hgt:3, shape:"jagged"},
-    {code:"CX-09", name:"ソルエクリプス (スマッシュ)", series:"CX", type:"ディフェンス", weight:40.0, atk:33, def:47, sta:20, dash:1, brst:8, hgt:3, shape:"round"},
-    {code:"CX-10", name:"ウルフハント", series:"CX", type:"スタミナ", weight:39.1, atk:25, def:30, sta:55, dash:1, brst:7, hgt:3, shape:"perfect_round"},
-    {code:"CX-11", name:"シャークギル", series:"CX", type:"スタミナ", weight:30.0, atk:20, def:25, sta:55, dash:1, brst:3, hgt:3, shape:"perfect_round"},
-    {code:"CX-11", name:"エンペラーマイト", series:"CX", type:"バランス", weight:45.7, atk:44, def:44, sta:37, dash:3, brst:10, hgt:3, shape:"semi_round"},
-    {code:"CX-12", name:"フェニックスフレア", series:"CX", type:"ディフェンス", weight:39.6, atk:47, def:55, sta:13, dash:1, brst:7, hgt:3, shape:"round"},
-    {code:"CX-13", name:"バハムートブリッツ", series:"CX", type:"アタック", weight:40.3, atk:65, def:20, sta:15, dash:5, brst:8, hgt:3, shape:"jagged"},
-    {code:"CX-14", name:"ナイトフォートレス", series:"CX", type:"ディフェンス", weight:38.1, atk:25, def:55, sta:20, dash:1, brst:7, hgt:3, shape:"round"},
-    {code:"CX-16", name:"ラグナレイジ", series:"CX", type:"スタミナ", weight:38.7, atk:25, def:20, sta:55, dash:1, brst:7, hgt:3, shape:"perfect_round"},
-    {code:"CX-18", name:"ブラキオウィップ", series:"CX", type:"スタミナ", weight:38.7, atk:13, def:35, sta:52, dash:1, brst:7, hgt:3, shape:"perfect_round"},
-    {code:"CX-19", name:"クロコトレッド", series:"CX", type:"ディフェンス", weight:38.2, atk:15, def:67, sta:18, dash:1, brst:7, hgt:3, shape:"round"}
+    {code:"BX-00", name:"コバルトドレイク", imgId:"bx00_cobaltdrake", series:"BX", type:"アタック", weight:37.2, atk:70, def:35, sta:25, dash:5, brst:6, hgt:3, shape:"jagged"},
+    {code:"BX-00", name:"フェニックスフェザー", imgId:"bx00_phoenixfeather", series:"BX", type:"アタック", weight:33.5, atk:50, def:20, sta:30, dash:5, brst:4, hgt:3, shape:"jagged"},
+    {code:"BX-00", name:"シノビナイフ", imgId:"bx00_shinobiknife", series:"BX", type:"ディフェンス", weight:31.2, atk:28, def:55, sta:32, dash:1, brst:3, hgt:3, shape:"round"},
+    {code:"BX-00", name:"マンモスタスク", imgId:"bx00_mammothfang", series:"BX", type:"バランス", weight:32.5, atk:38, def:40, sta:37, dash:3, brst:4, hgt:3, shape:"semi_round"},
+    {code:"BX-00", name:"クロコクランチ", imgId:"bx00_crococrunch", series:"BX", type:"アタック", weight:34.1, atk:65, def:27, sta:23, dash:5, brst:5, hgt:3, shape:"jagged"},
+    {code:"BX-00", name:"サムライスティール", imgId:"bx00_samuraisteel", series:"BX", type:"アタック", weight:31.4, atk:45, def:42, sta:28, dash:5, brst:3, hgt:3, shape:"jagged"},
+    {code:"BX-00", name:"トリケラスパイキー", imgId:"bx00_triceraspiky", series:"BX", type:"ディフェンス", weight:30.0, atk:32, def:55, sta:13, dash:1, brst:2, hgt:3, shape:"round"},
+    {code:"BX-01", name:"ドランソード", imgId:"bx01_dransword", series:"BX", type:"アタック", weight:34.9, atk:55, def:25, sta:20, dash:5, brst:5, hgt:3, shape:"jagged"},
+    {code:"BX-02", name:"ヘルズサイズ", imgId:"bx02_hellsscythe", series:"BX", type:"バランス", weight:32.9, atk:30, def:35, sta:35, dash:3, brst:4, hgt:3, shape:"semi_round"},
+    {code:"BX-03", name:"ウィザードアロー", imgId:"bx03_wizardarrow", series:"BX", type:"スタミナ", weight:31.8, atk:15, def:30, sta:55, dash:1, brst:3, hgt:3, shape:"perfect_round"},
+    {code:"BX-04", name:"ナイトシールド", imgId:"bx04_knightshield", series:"BX", type:"ディフェンス", weight:32.5, atk:20, def:55, sta:25, dash:1, brst:4, hgt:3, shape:"round"},
+    {code:"BX-13", name:"ナイトランス", imgId:"bx13_knightlance", series:"BX", type:"ディフェンス", weight:32.3, atk:25, def:60, sta:15, dash:1, brst:4, hgt:3, shape:"round"},
+    {code:"BX-14", name:"シャークエッジ", imgId:"bx14_sharkedge", series:"BX", type:"アタック", weight:34.5, atk:60, def:25, sta:15, dash:5, brst:5, hgt:3, shape:"jagged"},
+    {code:"BX-15", name:"レオンクロー", imgId:"bx15_leonclaw", series:"BX", type:"バランス", weight:31.6, atk:40, def:40, sta:20, dash:3, brst:3, hgt:3, shape:"semi_round"},
+    {code:"BX-16", name:"ヴァイパーテイル", imgId:"bx16_vipertail", series:"BX", type:"スタミナ", weight:34.6, atk:30, def:20, sta:50, dash:1, brst:5, hgt:3, shape:"perfect_round"},
+    {code:"BX-19", name:"ライノホーン", imgId:"bx19_rhinohorn", series:"BX", type:"ディフェンス", weight:32.8, atk:20, def:50, sta:30, dash:1, brst:4, hgt:3, shape:"round"},
+    {code:"BX-20", name:"ドランダガー", imgId:"bx20_drandagger", series:"BX", type:"アタック", weight:34.7, atk:50, def:25, sta:25, dash:5, brst:5, hgt:3, shape:"jagged"},
+    {code:"BX-21", name:"ヘルズチェイン", imgId:"bx21_hellschain", series:"BX", type:"バランス", weight:33.3, atk:35, def:40, sta:25, dash:3, brst:4, hgt:3, shape:"semi_round"},
+    {code:"BX-23", name:"フェニックスウイング", imgId:"bx23_phoenixwing", series:"BX", type:"アタック", weight:38.0, atk:65, def:30, sta:20, dash:5, brst:6, hgt:3, shape:"jagged"},
+    {code:"BX-24", name:"ワイバーンゲイル", imgId:"bx24_wyverngale", series:"BX", type:"スタミナ", weight:32.1, atk:10, def:40, sta:50, dash:1, brst:4, hgt:3, shape:"perfect_round"},
+    {code:"BX-26", name:"ユニコーンスティング", imgId:"bx26_unicornsting", series:"BX", type:"バランス", weight:33.3, atk:35, def:35, sta:30, dash:3, brst:4, hgt:3, shape:"semi_round"},
+    {code:"BX-27", name:"スフィンクスカウル", imgId:"bx27_sphinxcowl", series:"BX", type:"ディフェンス", weight:32.7, atk:35, def:55, sta:10, dash:1, brst:4, hgt:3, shape:"round"},
+    {code:"BX-31", name:"ティラノビート", imgId:"bx31_tyrannobeat", series:"BX", type:"アタック", weight:36.8, atk:65, def:30, sta:5, dash:5, brst:6, hgt:3, shape:"jagged"},
+    {code:"BX-33", name:"ヴァイスタイガー", imgId:"bx33_vicetiger", series:"BX", type:"アタック", weight:35.0, atk:45, def:30, sta:25, dash:5, brst:5, hgt:3, shape:"jagged"},
+    {code:"BX-34", name:"コバルトドラグーン", imgId:"bx34_cobaltdragoon", series:"BX", type:"アタック", weight:37.9, atk:60, def:15, sta:25, dash:5, brst:6, hgt:3, shape:"jagged"},
+    {code:"BX-35", name:"ブラックシェル", imgId:"bx35_blackshell", series:"BX", type:"ディフェンス", weight:32.6, atk:10, def:65, sta:25, dash:1, brst:4, hgt:3, shape:"round"},
+    {code:"BX-36", name:"ホエールウェーブ", imgId:"bx36_whalewave", series:"BX", type:"アタック", weight:38.2, atk:45, def:35, sta:20, dash:5, brst:7, hgt:3, shape:"jagged"},
+    {code:"BX-37", name:"ベアスクラッチ", imgId:"bx37_bearscratch", series:"BX", type:"ディフェンス", weight:29.7, atk:25, def:45, sta:30, dash:1, brst:2, hgt:3, shape:"round"},
+    {code:"BX-38", name:"クリムゾンガルーダ", imgId:"bx38_crimsongaruda", series:"BX", type:"アタック", weight:35.1, atk:45, def:25, sta:30, dash:5, brst:5, hgt:3, shape:"jagged"},
+    {code:"BX-39", name:"シェルタードレイク", imgId:"bx39_shelterdrake", series:"BX", type:"ディフェンス", weight:32.4, atk:25, def:40, sta:35, dash:1, brst:4, hgt:3, shape:"round"},
+    {code:"BX-44", name:"トリケラプレス", imgId:"bx44_tricerapress", series:"BX", type:"ディフェンス", weight:36.4, atk:20, def:65, sta:15, dash:1, brst:6, hgt:3, shape:"round"},
+    {code:"BX-45", name:"サムライカリバー", imgId:"bx45_samuraicalibur", series:"BX", type:"バランス", weight:36.0, atk:40, def:30, sta:30, dash:3, brst:6, hgt:3, shape:"semi_round"},
+    {code:"BX-46", name:"ゴートタックル", imgId:"bx46_goattackle", series:"BX", type:"ディフェンス", weight:31.4, atk:13, def:65, sta:22, dash:1, brst:3, hgt:3, shape:"round"},
+    {code:"BX-49", name:"ドランストライク", imgId:"bx49_dranstrike", series:"BX", type:"アタック", weight:41.2, atk:58, def:25, sta:17, dash:5, brst:8, hgt:3, shape:"jagged"},
+    {code:"BX-50", name:"ヘブンズリング", imgId:"bx50_heavensring", series:"BX", type:"ディフェンス", weight:37.3, atk:10, def:60, sta:30, dash:1, brst:6, hgt:3, shape:"round"},
+    {code:"UX-00", name:"エアロペガサス", imgId:"ux00_aeropegasus", series:"UX", type:"アタック", weight:38.7, atk:70, def:30, sta:35, dash:5, brst:7, hgt:3, shape:"jagged"},
+    {code:"UX-00", name:"オロチクラスタ", imgId:"ux00_orochicluster", series:"UX", type:"アタック", weight:36.1, atk:65, def:15, sta:20, dash:5, brst:6, hgt:3, shape:"jagged"},
+    {code:"UX-00", name:"ワイバーンホバー", imgId:"ux00_wyvernhover", series:"UX", type:"ディフェンス", weight:34.9, atk:13, def:60, sta:27, dash:1, brst:5, hgt:3, shape:"round"},
+    {code:"UX-01", name:"ドランバスター", imgId:"ux01_dranbuster", series:"UX", type:"アタック", weight:36.6, atk:70, def:20, sta:10, dash:5, brst:6, hgt:3, shape:"jagged"},
+    {code:"UX-02", name:"ヘルズハンマー", imgId:"ux02_hellshammer", series:"UX", type:"バランス", weight:33.3, atk:50, def:25, sta:25, dash:3, brst:4, hgt:3, shape:"semi_round"},
+    {code:"UX-03", name:"ウィザードロッド", imgId:"ux03_wizardrod", series:"UX", type:"スタミナ", weight:35.1, atk:15, def:25, sta:60, dash:1, brst:5, hgt:3, shape:"perfect_round"},
+    {code:"UX-05", name:"シノビシャドウ", imgId:"ux05_shinobishadow", series:"UX", type:"ディフェンス", weight:28.0, atk:10, def:70, sta:20, dash:1, brst:2, hgt:3, shape:"round"},
+    {code:"UX-06", name:"レオンクレスト", imgId:"ux06_leoncrest", series:"UX", type:"ディフェンス", weight:34.8, atk:15, def:70, sta:15, dash:1, brst:5, hgt:3, shape:"round"},
+    {code:"UX-07", name:"フェニックスラダー", imgId:"ux07_phoenixladder", series:"UX", type:"スタミナ", weight:34.2, atk:15, def:40, sta:60, dash:1, brst:5, hgt:3, shape:"perfect_round"},
+    {code:"UX-08", name:"シルバーウルフ", imgId:"ux08_silverwolf", series:"UX", type:"スタミナ", weight:36.7, atk:15, def:30, sta:65, dash:1, brst:6, hgt:3, shape:"perfect_round"},
+    {code:"UX-09", name:"サムライセイバー", imgId:"ux09_samuraisaber", series:"UX", type:"アタック", weight:36.5, atk:65, def:20, sta:25, dash:5, brst:6, hgt:3, shape:"jagged"},
+    {code:"UX-10", name:"プテラスイング", imgId:"ux10_pteraswing", series:"UX", type:"スタミナ", weight:34.4, atk:27, def:23, sta:50, dash:1, brst:5, hgt:3, shape:"perfect_round"},
+    {code:"UX-10", name:"ナイトメイル", imgId:"ux10_knightmail", series:"UX", type:"ディフェンス", weight:36.6, atk:15, def:70, sta:15, dash:1, brst:6, hgt:3, shape:"round"},
+    {code:"UX-11", name:"インパクトドレイク", imgId:"ux11_impactdrake", series:"UX", type:"アタック", weight:38.9, atk:75, def:25, sta:10, dash:5, brst:7, hgt:3, shape:"jagged"},
+    {code:"UX-12", name:"ゴーストサークル", imgId:"ux12_ghostcircle", series:"UX", type:"スタミナ", weight:26.6, atk:5, def:40, sta:55, dash:1, brst:1, hgt:3, shape:"perfect_round"},
+    {code:"UX-13", name:"ゴーレムロック", imgId:"ux13_golemlock", series:"UX", type:"ディフェンス", weight:34.0, atk:30, def:60, sta:10, dash:1, brst:5, hgt:3, shape:"round"},
+    {code:"UX-14", name:"スコーピオスピア", imgId:"ux14_scorpiospear", series:"UX", type:"ディフェンス", weight:39.8, atk:25, def:55, sta:30, dash:1, brst:7, hgt:3, shape:"round"},
+    {code:"UX-15", name:"ティラノロア", imgId:"ux15_tyrannoroar", series:"UX", type:"アタック", weight:36.0, atk:60, def:28, sta:12, dash:5, brst:6, hgt:3, shape:"jagged"},
+    {code:"UX-15", name:"シャークスケイル", imgId:"ux15_sharkscale", series:"UX", type:"アタック", weight:37.3, atk:70, def:15, sta:15, dash:5, brst:6, hgt:3, shape:"jagged"},
+    {code:"UX-16", name:"クロックミラージュ", imgId:"ux16_clockmirage", series:"UX", type:"スタミナ", weight:37.7, atk:10, def:10, sta:80, dash:1, brst:6, hgt:3, shape:"perfect_round"},
+    {code:"UX-17", name:"メテオドラグーン", imgId:"ux17_meteordragoon", series:"UX", type:"アタック", weight:39.0, atk:75, def:15, sta:35, dash:5, brst:7, hgt:3, shape:"jagged"},
+    {code:"UX-18", name:"マミーカース", imgId:"ux18_mummycurse", series:"UX", type:"ディフェンス", weight:37.6, atk:30, def:60, sta:20, dash:1, brst:6, hgt:3, shape:"round"},
+    {code:"UX-19", name:"バレットグリフォン", imgId:"ux19_bulletgryphon", series:"UX", type:"バランス", weight:60.7, atk:45, def:45, sta:40, dash:3, brst:18, hgt:3, shape:"semi_round"},
+    {code:"UX-20", name:"グローリーワルキューレ", imgId:"ux20_gloryvalkyrie", series:"UX", type:"アタック", weight:43.5, atk:85, def:35, sta:25, dash:5, brst:9, hgt:3, shape:"jagged"},
+    {code:"UX-21", name:"ヘルズネザー (ノーマル)", imgId:"ux21_hellsnether_normal", series:"UX", type:"バランス", weight:42.9, atk:50, def:50, sta:30, dash:3, brst:9, hgt:3, shape:"semi_round"},
+    {code:"UX-21", name:"ヘルズネザー (ロー)", imgId:"ux21_hellsnether_low", series:"UX", type:"アタック", weight:42.9, atk:70, def:45, sta:15, dash:5, brst:9, hgt:3, shape:"jagged"},
+    {code:"CX-00", name:"ワルキューレボルト", imgId:"cx00_valkyriebolt", series:"CX", type:"アタック", weight:38.0, atk:69, def:29, sta:27, dash:5, brst:7, hgt:3, shape:"jagged"},
+    {code:"CX-01", name:"ドランブレイブ", imgId:"cx01_dranbrave", series:"CX", type:"アタック", weight:37.6, atk:60, def:20, sta:20, dash:5, brst:6, hgt:3, shape:"jagged"},
+    {code:"CX-02", name:"ウィザードアーク", imgId:"cx02_wizardark", series:"CX", type:"スタミナ", weight:35.6, atk:20, def:20, sta:60, dash:1, brst:5, hgt:3, shape:"perfect_round"},
+    {code:"CX-03", name:"ペルセウスダーク", imgId:"cx03_perseusdark", series:"CX", type:"ディフェンス", weight:37.0, atk:20, def:60, sta:20, dash:1, brst:6, hgt:3, shape:"round"},
+    {code:"CX-05", name:"ヘルズリーパー (連撃)", imgId:"cx05_hellsreaper_rengeki", series:"CX", type:"バランス", weight:36.5, atk:40, def:20, sta:45, dash:3, brst:6, hgt:3, shape:"semi_round"},
+    {code:"CX-05", name:"ヘルズリーパー (受け流し)", imgId:"cx05_hellsreaper_ukenagashi", series:"CX", type:"バランス", weight:36.5, atk:35, def:20, sta:45, dash:3, brst:6, hgt:3, shape:"semi_round"},
+    {code:"CX-05", name:"ライノリーパー", imgId:"cx05_rhinoreaper", series:"CX", type:"バランス", weight:35.8, atk:40, def:30, sta:30, dash:3, brst:5, hgt:3, shape:"semi_round"},
+    {code:"CX-06", name:"フォックスブラッシュ", imgId:"cx06_foxbrush", series:"CX", type:"アタック", weight:36.8, atk:60, def:30, sta:10, dash:5, brst:6, hgt:3, shape:"jagged"},
+    {code:"CX-07", name:"ペガサスブラスト", imgId:"cx07_pegasusblast", series:"CX", type:"アタック", weight:39.3, atk:75, def:20, sta:20, dash:5, brst:7, hgt:3, shape:"jagged"},
+    {code:"CX-08", name:"ケルベロスフレイム", imgId:"cx08_cerberusflame", series:"CX", type:"スタミナ", weight:37.3, atk:10, def:30, sta:60, dash:1, brst:6, hgt:3, shape:"perfect_round"},
+    {code:"CX-08", name:"ホエールフレイム", imgId:"cx08_whaleflame", series:"CX", type:"スタミナ", weight:36.0, atk:20, def:30, sta:50, dash:1, brst:6, hgt:3, shape:"perfect_round"},
+    {code:"CX-09", name:"ソルエクリプス (アッパー)", imgId:"cx09_soleclipse_upper", series:"CX", type:"アタック", weight:40.0, atk:47, def:33, sta:20, dash:5, brst:8, hgt:3, shape:"jagged"},
+    {code:"CX-09", name:"ソルエクリプス (スマッシュ)", imgId:"cx09_soleclipse_smash", series:"CX", type:"ディフェンス", weight:40.0, atk:33, def:47, sta:20, dash:1, brst:8, hgt:3, shape:"round"},
+    {code:"CX-10", name:"ウルフハント", imgId:"cx10_wolfhunt", series:"CX", type:"スタミナ", weight:39.1, atk:25, def:30, sta:55, dash:1, brst:7, hgt:3, shape:"perfect_round"},
+    {code:"CX-11", name:"シャークギル", imgId:"cx11_sharkgill", series:"CX", type:"スタミナ", weight:30.0, atk:20, def:25, sta:55, dash:1, brst:3, hgt:3, shape:"perfect_round"},
+    {code:"CX-11", name:"エンペラーマイト", imgId:"cx11_emperormight", series:"CX", type:"バランス", weight:45.7, atk:44, def:44, sta:37, dash:3, brst:10, hgt:3, shape:"semi_round"},
+    {code:"CX-12", name:"フェニックスフレア", imgId:"cx12_phoenixflare", series:"CX", type:"ディフェンス", weight:39.6, atk:47, def:55, sta:13, dash:1, brst:7, hgt:3, shape:"round"},
+    {code:"CX-13", name:"バハムートブリッツ", imgId:"cx13_bahamutblitz", series:"CX", type:"アタック", weight:40.3, atk:65, def:20, sta:15, dash:5, brst:8, hgt:3, shape:"jagged"},
+    {code:"CX-14", name:"ナイトフォートレス", imgId:"cx14_knightfortress", series:"CX", type:"ディフェンス", weight:38.1, atk:25, def:55, sta:20, dash:1, brst:7, hgt:3, shape:"round"},
+    {code:"CX-16", name:"ラグナレイジ", imgId:"cx16_ragnarage", series:"CX", type:"スタミナ", weight:38.7, atk:25, def:20, sta:55, dash:1, brst:7, hgt:3, shape:"perfect_round"},
+    {code:"CX-17", name:"ユニコーンデルタ", imgId:"cx17_unicorndelta", series:"CX", type:"バランス", weight:36.0, atk:35, def:35, sta:30, dash:3, brst:5, hgt:3, shape:"semi_round"},
+    {code:"CX-18", name:"ブラキオウィップ", imgId:"cx18_brachiowhip", series:"CX", type:"スタミナ", weight:38.7, atk:13, def:35, sta:52, dash:1, brst:7, hgt:3, shape:"perfect_round"},
+    {code:"CX-19", name:"クロコトレッド", imgId:"cx19_crocotread", series:"CX", type:"ディフェンス", weight:38.2, atk:15, def:67, sta:18, dash:1, brst:7, hgt:3, shape:"round"}
   ];
 
-  // ラチェットデータ（全22種類網羅）
+  // ラチェットデータ（全22種）
   var ratchets = [
     {code:"R", name:"0-60", series:"全般", type:"ラチェット", weight:6.8, atk:3, def:14, sta:13, dash:0, brst:8, hgt:4, bladesCount:0, heightVal:60},
     {code:"R", name:"0-70", series:"全般", type:"ラチェット", weight:7.0, atk:3, def:13, sta:14, dash:0, brst:6, hgt:6, bladesCount:0, heightVal:70},
@@ -832,7 +833,7 @@
     {code:"R", name:"M-85", series:"全般", type:"ラチェット", weight:10.5, atk:15, def:15, sta:5, dash:0, brst:3, hgt:9, bladesCount:0, heightVal:85}
   ];
 
-  // ビットデータ（全52種類網羅）
+  // ビットデータ（全52種）
   var bits = [
     {code:"Bit", name:"F (Flat)", series:"全般", type:"アタック", weight:2.3, atk:40, def:15, sta:10, dash:35, brst:80, hgt:3},
     {code:"Bit", name:"T (Taper)", series:"全般", type:"バランス", weight:2.3, atk:35, def:20, sta:20, dash:25, brst:80, hgt:3},
@@ -890,7 +891,7 @@
 
   // 全パーツに動的に一意のIDを生成・付与
   blades.forEach(function(b, idx) {
-    b.id = 'b_' + idx + '_' + (b.imgKey || b.code + '_' + b.name).replace(/[^a-zA-Z0-9]/g, '_');
+    b.id = 'b_' + idx + '_' + (b.imgId || b.imgKey || b.code + '_' + b.name).replace(/[^a-zA-Z0-9]/g, '_');
   });
   ratchets.forEach(function(r, idx) {
     r.id = 'r_' + idx + '_' + r.name.replace(/[^a-zA-Z0-9]/g, '_');
@@ -951,18 +952,23 @@
     return '<svg class="svg-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">' + pathData + '</svg>';
   }
 
+  // 画像表示ロジック（imgId最優先）
   function renderPartDisplay(category, item) {
     if(!item) return '';
-    var cleanCode = (item.code || '').replace('-', '').toLowerCase();
-    var cleanName = item.name.split(' ')[0];
-
     var baseName = '';
+
     if (category === 'blade') {
-      baseName = item.imgKey ? item.imgKey : cleanCode;
+      if (item.imgId) {
+        baseName = item.imgId;
+      } else if (item.imgKey) {
+        baseName = item.imgKey;
+      } else {
+        baseName = (item.code || '').replace('-', '').toLowerCase();
+      }
     } else if (category === 'ratchet') {
       baseName = item.name;
     } else if (category === 'bit') {
-      baseName = cleanName;
+      baseName = item.name.split(' ')[0];
     }
 
     var candidates = [
