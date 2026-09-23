@@ -10,10 +10,10 @@
   :root {
     --primary: #3b82f6;          /* 主アクセント：標準ブルー */
     --secondary: #f43f5e;        /* サブアクセント：ローズレッド */
-    --bg-color: #0f172a;         /* 背景：ダークスレート */
-    --card-bg: #1e293b;          /* カード背景 */
+    --bg-color: #0f172a;          /* 背景：ダークスレート */
+    --card-bg: #1e293b;           /* カード背景 */
     --card-inner: #0f172a;       /* カード内背景 */
-    --border-color: #334155;     /* 枠線色 */
+    --border-color: #334155;      /* 枠線色 */
     --text-main: #f8fafc;        /* 主文字：クリアホワイト */
     --text-muted: #94a3b8;       /* サブ文字：グレー */
 
@@ -591,7 +591,7 @@
 (function() {
   'use strict';
 
-  // 各パーツの影響度（必要に応じて数値を変更可能です）
+  // 各パーツの影響度（重み付けパラメータ）
   var INFLUENCE = { blade: 1.00, bit: 0.75, ratchet: 0.35 };
 
   function getTypeColor(type) {
@@ -602,7 +602,7 @@
     return 'var(--type-other)';
   }
 
-  // ブレードデータ（全83種類・00番パーツに指定のimgKeyを配置）
+  // ブレードデータ
   var blades = [
     {code:"BX-00", name:"コバルトドレイク", imgKey:"bx00_cobalt", series:"BX", type:"アタック", weight:37.2, atk:70, def:35, sta:25, dash:5, brst:6, hgt:3, shape:"jagged"},
     {code:"BX-00", name:"フェニックスフェザー", imgKey:"bx00_phoenix", series:"BX", type:"アタック", weight:33.5, atk:50, def:20, sta:30, dash:5, brst:4, hgt:3, shape:"jagged"},
@@ -689,7 +689,7 @@
     {code:"CX-19", name:"クロコトレッド", series:"CX", type:"ディフェンス", weight:38.2, atk:15, def:67, sta:18, dash:1, brst:7, hgt:3, shape:"round"}
   ];
 
-  // ラチェットデータ（全22種類）
+  // ラチェットデータ
   var ratchets = [
     {code:"R", name:"0-60", series:"全般", type:"ラチェット", weight:6.8, atk:3, def:14, sta:13, dash:0, brst:8, hgt:4, bladesCount:0, heightVal:60},
     {code:"R", name:"0-70", series:"全般", type:"ラチェット", weight:7.0, atk:3, def:13, sta:14, dash:0, brst:6, hgt:6, bladesCount:0, heightVal:70},
@@ -715,7 +715,7 @@
     {code:"R", name:"M-85", series:"全般", type:"ラチェット", weight:10.5, atk:15, def:15, sta:5, dash:0, brst:3, hgt:9, bladesCount:0, heightVal:85}
   ];
 
-  // ビットデータ（全52種類）
+  // ビットデータ
   var bits = [
     {code:"Bit", name:"F (Flat)", series:"全般", type:"アタック", weight:2.3, atk:40, def:15, sta:10, dash:35, brst:80, hgt:3},
     {code:"Bit", name:"T (Taper)", series:"全般", type:"バランス", weight:2.3, atk:35, def:20, sta:20, dash:25, brst:80, hgt:3},
@@ -794,32 +794,24 @@
     return '<svg class="svg-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">' + pathData + '</svg>';
   }
 
-  // ピンポイント探索機能（00パーツ直指定＆通常パーツ型番直指定）
   function renderPartDisplay(category, item) {
     if(!item) return '';
     
-    var cleanCode = (item.code || '').replace('-', '').toLowerCase(); // bx00, bx01
-    var cleanName = item.name.split(' ')[0];                           // ドランソード
+    var cleanCode = (item.code || '').replace('-', '').toLowerCase();
+    var cleanName = item.name.split(' ')[0];
 
     var baseName = '';
     if (category === 'blade') {
-      if (item.imgKey) {
-        baseName = item.imgKey;
-      } else {
-        baseName = cleanCode;
-      }
+      baseName = item.imgKey ? item.imgKey : cleanCode;
     } else if (category === 'ratchet') {
       baseName = item.name;
     } else if (category === 'bit') {
       baseName = cleanName;
     }
 
-    // .png と .jpg の2パターンのみを迅速試行してエラー負荷を劇的に軽減
     var candidates = [
       'images/' + baseName + '.png',
-      'images/' + baseName + '.jpg',
-      './images/' + baseName + '.png',
-      './images/' + baseName + '.jpg'
+      'images/' + baseName + '.jpg'
     ];
 
     var candidatesStr = candidates.join('|');
@@ -909,7 +901,6 @@
         var rawCandidates = img.getAttribute('data-candidates') || '';
         var candidates = rawCandidates.split('|');
         var idx = parseInt(img.getAttribute('data-idx') || '0', 10);
-        
         var nextIdx = idx + 1;
 
         if (candidates[nextIdx] && candidates[nextIdx] !== '') {
@@ -973,13 +964,9 @@
       rImgBox.innerHTML = renderPartDisplay('ratchet', rt);
       btImgBox.innerHTML = renderPartDisplay('bit', bt);
 
-      var bColor = getTypeColor(bd.type);
-      var rColor = getTypeColor(rt.type);
-      var btColor = getTypeColor(bt.type);
-
-      bImgBox.style.borderColor = bColor;
-      rImgBox.style.borderColor = rColor;
-      btImgBox.style.borderColor = btColor;
+      bImgBox.style.borderColor = getTypeColor(bd.type);
+      rImgBox.style.borderColor = getTypeColor(rt.type);
+      btImgBox.style.borderColor = getTypeColor(bt.type);
 
       var stats = calculatePhysicsStats(bd, rt, bt);
 
@@ -1018,11 +1005,15 @@
         if(activeBtn) activeBtn.classList.add('active');
 
         var combos = [];
-        for (var i = 0; i < blades.length; i++) {
-          for (var j = 0; j < ratchets.length; j++) {
-            for (var k = 0; k < bits.length; k++) {
-              var bd = blades[i];
-              var rt = ratchets[j];
+        var bLen = blades.length;
+        var rLen = ratchets.length;
+        var btLen = bits.length;
+
+        for (var i = 0; i < bLen; i++) {
+          var bd = blades[i];
+          for (var j = 0; j < rLen; j++) {
+            var rt = ratchets[j];
+            for (var k = 0; k < btLen; k++) {
               var bt = bits[k];
               var pStats = calculatePhysicsStats(bd, rt, bt);
               var score = targetKey === 'weight' ? Number(pStats.totalWeight) : pStats[targetKey];
